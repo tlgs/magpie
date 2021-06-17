@@ -1,0 +1,26 @@
+version: "3"
+
+services:
+  airsonic:
+    image: airsonicadvanced/airsonic-advanced
+    container_name: airsonic
+    environment:
+      PUID: 1000
+      PGID: 1000
+      TZ: Europe/Dublin
+      VIRTUAL_HOST: airsonic.magpie.local
+      VIRTUAL_PORT: 4040
+    volumes:
+      - "/home/pi/airsonic/data:/var/airsonic"
+      - "/home/pi/airsonic/music:/var/music"
+      - "/home/pi/airsonic/playlists:/var/playlists"
+      - "/home/pi/airsonic/podcasts:/var/podcasts"
+    ports:
+      - "4040:4040"
+    networks:
+      - front_proxy
+    restart: unless-stopped
+
+networks:
+  front_proxy:
+    external: true

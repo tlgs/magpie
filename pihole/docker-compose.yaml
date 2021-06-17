@@ -1,0 +1,64 @@
+version: "3"
+
+services:
+  pihole:
+    container_name: pihole
+    image: pihole/pihole:latest
+    depends_on:
+      - dhcp-helper
+    hostname: mag-pihole
+    cap_add:
+      - NET_ADMIN
+    environment:
+      TZ: Europe/Dublin
+      WEBPASSWORD_FILE: "/run/secrets/pihole_webpassword"
+      PIHOLE_DNS_: 1.1.1.1;1.0.0.1
+      ServerIP: 192.168.0.69
+      DNSMASQ_LISTENING: all
+      DHCP_ACTIVE: "true"
+      DHCP_START: 192.168.0.100
+      DHCP_END: 192.168.0.249
+      DHCP_ROUTER: 192.168.0.1
+      DHCP_LEASETIME: 2
+      PIHOLE_DOMAIN: none
+      VIRTUAL_HOST: pihole.magpie.local
+      VIRTUAL_PORT: 80
+    dns:
+      - 127.0.0.1
+      - 1.1.1.1
+    volumes:
+      - "/home/pi/pihole/etc-pihole/:/etc/pihole/"
+      - "/home/pi/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/"
+      - "/home/pi/pihole/var-log/pihole.log:/var/log/pihole.log"
+    ports:
+      - "53:53/tcp"
+      - "53:53/udp"
+      - "8080:80/tcp"
+    networks:
+      front_proxy:
+      dhcp_relay:
+        ipv4_address: 172.31.0.100
+    restart: unless-stopped
+
+  dhcp-helper:
+    container_name: dhcp-helper
+    build: ./dhcp-helper
+    image: dhcp-helper
+    command: -s 172.31.0.100
+    cap_add:
+      - NET_ADMIN
+    network_mode: host
+    restart: unless-stopped
+
+networks:
+  dhcp_relay:
+    name: dhcp_relay
+    ipam:
+      config:
+        - subnet: 172.31.0.0/16
+  front_proxy:
+    external: true
+
+secrets:
+  pihole_webpassword:
+    file: pihole_webpassword.txt

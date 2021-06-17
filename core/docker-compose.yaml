@@ -1,0 +1,65 @@
+version: "3"
+
+services:
+  nginx-proxy:
+    container_name: nginx-proxy
+    image: nginxproxy/nginx-proxy
+    ports:
+      - "80:80"
+    volumes:
+      - "nginx_proxy_certs:/etc/nginx/certs"
+      - "nginx_proxy_dhparam:/etc/nginx/dhparam"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+    networks:
+      - proxy
+    restart: unless-stopped 
+
+  portainer:
+    container_name: portainer
+    image: portainer/portainer-ce
+    ports:
+      - "9000:9000"
+    environment:
+      VIRTUAL_HOST: portainer.magpie.local
+      VIRTUAL_PORT: 9000
+    volumes:
+      - "portainer_data:/data"
+      - "/var/run/docker.sock:/var/run/docker.sock" 
+    networks:
+      - proxy
+    restart: unless-stopped
+
+  cadvisor:
+    container_name: cadvisor
+    build: ./cadvisor
+    image: cadvisor
+    ports:
+      - "8081:8080/tcp"
+    environment:
+      VIRTUAL_HOST: cadvisor.magpie.local
+      VIRTUAL_PORT: 8080
+    volumes:
+      - "/:/rootfs:ro"
+      - "/var/run:/var/run:ro"
+      - "/sys:/sys:ro"
+      - "/var/lib/docker/:/var/lib/docker:ro"
+      - "/dev/disk/:/dev/disk:ro"
+    devices:
+      - "/dev/kmsg:/dev/kmsg"
+    networks:
+      - proxy
+    restart: unless-stopped
+
+networks:
+  proxy:
+    name: front_proxy
+
+volumes:
+  nginx_proxy_certs:
+    name: nginx_proxy_certs
+    
+  nginx_proxy_dhparam:
+    name: nginx_proxy_dhparam
+
+  portainer_data:
+    name: portainer_data
