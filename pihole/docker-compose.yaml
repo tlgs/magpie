@@ -11,7 +11,6 @@ services:
       - NET_ADMIN
     environment:
       TZ: Europe/Dublin
-      WEBPASSWORD_FILE: "/run/secrets/pihole_webpassword"
       PIHOLE_DNS_: 1.1.1.1;1.0.0.1
       ServerIP: 192.168.0.69
       DNSMASQ_LISTENING: all
@@ -58,7 +57,3 @@ networks:
         - subnet: 172.31.0.0/16
   front_proxy:
     external: true
-
-secrets:
-  pihole_webpassword:
-    file: pihole_webpassword.txt
