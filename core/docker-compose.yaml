@@ -1,43 +1,63 @@
 version: "3"
 
 services:
-  nginx-proxy:
-    container_name: nginx-proxy
-    image: nginxproxy/nginx-proxy
+  traefik:
+    container_name: traefik
+    image: traefik
+    command:
+      - "--api.dashboard=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`traefik.magpie.local`)"
+      - "traefik.http.routers.dashboard.service=api@internal"
     ports:
       - "80:80"
+      - "8080:8080"
     volumes:
-      - "nginx_proxy_certs:/etc/nginx/certs"
-      - "nginx_proxy_dhparam:/etc/nginx/dhparam"
-      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+      - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
-      - proxy
-    restart: unless-stopped 
+      - traefik
+    restart: unless-stopped
 
   portainer:
     container_name: portainer
     image: portainer/portainer-ce
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.magpie.local`)"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
     ports:
-      - "9000:9000"
-    environment:
-      VIRTUAL_HOST: portainer.magpie.local
-      VIRTUAL_PORT: 9000
+      - "8081:9000"
     volumes:
       - "portainer_data:/data"
       - "/var/run/docker.sock:/var/run/docker.sock" 
     networks:
-      - proxy
+      - traefik
+    restart: unless-stopped
+
+  watchtower:
+    container_name: watchtower
+    image: containrrr/watchtower
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock"
+    networks:
+      - traefik
     restart: unless-stopped
 
   cadvisor:
     container_name: cadvisor
     build: ./cadvisor
     image: cadvisor
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.cadvisor.rule=Host(`cadvisor.magpie.local`)"
+      - "traefik.http.services.cadvisor.loadbalancer.server.port=8080"
     ports:
-      - "8081:8080/tcp"
-    environment:
-      VIRTUAL_HOST: cadvisor.magpie.local
-      VIRTUAL_PORT: 8080
+      - "8082:8080"
     volumes:
       - "/:/rootfs:ro"
       - "/var/run:/var/run:ro"
@@ -47,19 +67,13 @@ services:
     devices:
       - "/dev/kmsg:/dev/kmsg"
     networks:
-      - proxy
+      - traefik
     restart: unless-stopped
 
 networks:
-  proxy:
-    name: front_proxy
+  traefik:
+    name: traefik
 
 volumes:
-  nginx_proxy_certs:
-    name: nginx_proxy_certs
-    
-  nginx_proxy_dhparam:
-    name: nginx_proxy_dhparam
-
   portainer_data:
     name: portainer_data

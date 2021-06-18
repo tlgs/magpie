@@ -4,12 +4,14 @@ services:
   airsonic:
     image: airsonicadvanced/airsonic-advanced
     container_name: airsonic
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.airsonic.rule=Host(`airsonic.magpie.local`)"
+      - "traefik.http.services.airsonic.loadbalancer.server.port=4040"
     environment:
       PUID: 1000
       PGID: 1000
       TZ: Europe/Dublin
-      VIRTUAL_HOST: airsonic.magpie.local
-      VIRTUAL_PORT: 4040
     volumes:
       - "/home/pi/airsonic/data:/var/airsonic"
       - "/home/pi/airsonic/music:/var/music"
@@ -18,9 +20,9 @@ services:
     ports:
       - "4040:4040"
     networks:
-      - front_proxy
+      - traefik
     restart: unless-stopped
 
 networks:
-  front_proxy:
+  traefik:
     external: true

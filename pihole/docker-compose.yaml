@@ -3,9 +3,14 @@ version: "3"
 services:
   pihole:
     container_name: pihole
-    image: pihole/pihole:latest
+    image: pihole/pihole
     depends_on:
       - dhcp-helper
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.pihole.rule=Host(`pihole.magpie.local`)"
+      - "traefik.http.routers.pihole.entrypoints=web"
+      - "traefik.http.services.pihole.loadbalancer.server.port=80"
     hostname: mag-pihole
     cap_add:
       - NET_ADMIN
@@ -32,9 +37,9 @@ services:
     ports:
       - "53:53/tcp"
       - "53:53/udp"
-      - "8080:80/tcp"
+      - "8083:80/tcp"
     networks:
-      front_proxy:
+      traefik:
       dhcp_relay:
         ipv4_address: 172.31.0.100
     restart: unless-stopped
@@ -55,5 +60,5 @@ networks:
     ipam:
       config:
         - subnet: 172.31.0.0/16
-  front_proxy:
+  traefik:
     external: true
