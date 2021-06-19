@@ -85,6 +85,7 @@ services:
       - "8083:9090"
     volumes:
       - "./prometheus.yaml:/etc/prometheus/prometheus.yml:ro"
+      - "prometheus_data:/prometheus"
     networks:
       - traefik
     restart: unless-stopped
@@ -96,3 +97,5 @@ networks:
 volumes:
   portainer_data:
     name: portainer_data
+  prometheus_data:
+    name: prometheus_data
