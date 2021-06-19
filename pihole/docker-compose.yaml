@@ -6,17 +6,17 @@ services:
     image: pihole/pihole
     depends_on:
       - dhcp-helper
+      - unbound
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.pihole.rule=Host(`pihole.magpie.local`)"
-      - "traefik.http.routers.pihole.entrypoints=web"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
     hostname: mag-pihole
     cap_add:
       - NET_ADMIN
     environment:
       TZ: Europe/Dublin
-      PIHOLE_DNS_: 1.1.1.1;1.0.0.1
+      PIHOLE_DNS_: 172.20.0.53#5335;172.20.0.53#5335
       ServerIP: 192.168.0.69
       DNSMASQ_LISTENING: all
       DHCP_ACTIVE: "true"
@@ -29,7 +29,7 @@ services:
       VIRTUAL_PORT: 80
     dns:
       - 127.0.0.1
-      - 1.1.1.1
+      - 172.20.0.53
     volumes:
       - "/home/pi/pihole/etc-pihole/:/etc/pihole/"
       - "/home/pi/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/"
@@ -37,11 +37,13 @@ services:
     ports:
       - "53:53/tcp"
       - "53:53/udp"
-      - "8083:80/tcp"
+      - "8084:80/tcp"
     networks:
       traefik:
       dhcp_relay:
         ipv4_address: 172.31.0.100
+      dns_net:
+        ipv4_address: 172.20.0.100
     restart: unless-stopped
 
   dhcp-helper:
@@ -54,11 +56,34 @@ services:
     network_mode: host
     restart: unless-stopped
 
+  unbound:
+    container_name: unbound
+    image: mvance/unbound-rpi
+    ports:
+      - "5335:5335/tcp"
+      - "5335:5335/udp"
+    volumes:
+      - "./unbound.conf:/opt/unbound/etc/unbound/unbound.conf:ro"
+    networks:
+       dns_net:
+         ipv4_address: 172.20.0.53
+    healthcheck:
+      test: ["CMD", "drill", "@127.0.0.1", "-p", "5335", "cloudflare.com", "||", "exit", "1"]
+      interval: 5s
+      timeout: 3s
+      start_period: 5s
+    restart: unless-stopped
+
 networks:
   dhcp_relay:
     name: dhcp_relay
     ipam:
       config:
         - subnet: 172.31.0.0/16
+  dns_net:
+    name: dns_net
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
   traefik:
     external: true
