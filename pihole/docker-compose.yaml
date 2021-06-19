@@ -9,6 +9,7 @@ services:
       - unbound
     labels:
       - "traefik.enable=true"
+      - "traefik.docker.network=traefik"
       - "traefik.http.routers.pihole.rule=Host(`pihole.magpie.local`)"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
     hostname: mag-pihole
@@ -25,8 +26,6 @@ services:
       DHCP_ROUTER: 192.168.0.1
       DHCP_LEASETIME: 2
       PIHOLE_DOMAIN: none
-      VIRTUAL_HOST: pihole.magpie.local
-      VIRTUAL_PORT: 80
     dns:
       - 127.0.0.1
       - 172.20.0.53
@@ -34,6 +33,7 @@ services:
       - "/home/pi/pihole/etc-pihole/:/etc/pihole/"
       - "/home/pi/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/"
       - "/home/pi/pihole/var-log/pihole.log:/var/log/pihole.log"
+      - "./external.conf:/etc/lighttpd/external.conf"
     ports:
       - "53:53/tcp"
       - "53:53/udp"
