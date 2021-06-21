@@ -2,8 +2,8 @@ version: "3"
 
 services:
   airsonic:
-    image: airsonicadvanced/airsonic-advanced
     container_name: airsonic
+    image: airsonicadvanced/airsonic-advanced
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.airsonic.rule=Host(`airsonic.magpie.local`)"
@@ -19,6 +19,26 @@ services:
       - "/home/pi/airsonic/podcasts:/var/podcasts"
     ports:
       - "4040:4040"
+    networks:
+      - traefik
+    restart: unless-stopped
+
+  nfs-server:
+    container_name: nfs-server
+    build: ./docker-nfs-server
+    image: nfs-server
+    cap_add:
+      - SYS_ADMIN
+      - SYS_MODULE
+    environment:
+      NFS_DISABLE_VERSION_3: 1
+    volumes:
+      - "/home/pi/airsonic/music:/nfs-music"
+      - "./nfs-exports.txt:/etc/exports:ro"
+      - "/lib/modules:/lib/modules:ro"
+    ports:
+      - 2049:2049
+      - 2049:2049/udp
     networks:
       - traefik
     restart: unless-stopped
