@@ -1,9 +1,7 @@
-ARG BUILD_FROM=alpine:latest
+FROM alpine:latest
 
-FROM $BUILD_FROM
-
-RUN apk --update --no-cache add bash nfs-utils && \
-                                                  \
+RUN apk --update --no-cache add bash nfs-utils curl && \
+                                                       \
     # remove the default config files
     rm -v /etc/idmapd.conf /etc/exports
 
@@ -16,5 +14,10 @@ RUN mkdir -p /var/lib/nfs/rpc_pipefs                                            
 EXPOSE 2049
 
 # setup entrypoint
-COPY ./entrypoint.sh /usr/local/bin
+COPY ./entrypoint.patch /usr/local/bin/entrypoint.patch
+
+RUN cd /usr/local/bin                                                                                     && \ 
+    curl -o entrypoint.sh https://raw.githubusercontent.com/ehough/docker-nfs-server/v2.2.1/entrypoint.sh && \
+    patch < entrypoint.patch
+
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]

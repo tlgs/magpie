@@ -1,9 +1,10 @@
+# airsonic
 
+## nfs-server
 
-## docker-nfs-server
-
-The `erichough/nfs-server` is the most versatile NFS server solution
-in Docker; however, it suffers from a couple of big problems:
+The [`erichough/nfs-server`](https://github.com/ehough/docker-nfs-server)
+is the most versatile NFS server solution in Docker;
+however, it suffers from a couple of big problems:
 
 - no ARM image
 - largely unmaintained (no commits in more than one year)
@@ -15,16 +16,7 @@ There is currently a PR with the solution
 ([#67](https://github.com/ehough/docker-nfs-server/pull/67)),
 but I don't have any hope of it being merged anytime soon.
 
-What I did then, was clone the project here, remove unnecessary files
-and apply the patch myself.
-
-```console
-$ git clone --depth 1 https://github.com/ehough/docker-nfs-server.git
-$ rm -rf docker-nfs-server/.git
-$ rm -rf docker-nfs-server/.github
-$ rm -rf docker-nfs-server/doc
-$ rm docker-nfs-server/.gitignore
-$ rm docker-nfs-server/.dockerignore
-$ rm docker-nfs-server/CHANGELOG.md
-$ rm docker-nfs-server/README.md
-```
+The current working solution involves changing the original Dockerfile to fetch
+the latest tagged version of the _entrypoint file_ and applying a patch.
+The patch was created by cloning the working fork and running
+`git diff v2.2.1..HEAD entrypoint.sh > entrypoint.patch`.

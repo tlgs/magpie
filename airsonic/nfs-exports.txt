@@ -1,1 +1,1 @@
-/nfs-music 192.168.0.0/24(fsid=0)
+/nfs-music 192.168.0.0/24(rw,fsid=0)

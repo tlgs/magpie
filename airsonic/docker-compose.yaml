@@ -25,7 +25,7 @@ services:
 
   nfs-server:
     container_name: nfs-server
-    build: ./docker-nfs-server
+    build: ./nfs-server
     image: nfs-server
     cap_add:
       - SYS_ADMIN
@@ -38,7 +38,6 @@ services:
       - "/lib/modules:/lib/modules:ro"
     ports:
       - 2049:2049
-      - 2049:2049/udp
     networks:
       - traefik
     restart: unless-stopped
