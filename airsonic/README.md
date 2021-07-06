@@ -1,5 +1,11 @@
 # airsonic
 
+Possible alternative to airsonic-advanced is
+[Navidrome](https://github.com/navidrome/navidrome/)
+once Sonos is supported [(#165)](https://github.com/navidrome/navidrome/issues/165).
+Note that Sonos support can be achieved by a
+[separate service](https://github.com/simojenki/bonob).
+
 ## nfs-server
 
 The [`erichough/nfs-server`](https://github.com/ehough/docker-nfs-server)
