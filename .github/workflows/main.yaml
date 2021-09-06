@@ -4,20 +4,11 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    container: hadolint/hadolint:latest-debian
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
 
-      - name: Install hadolint from source
-        run: |
-          sudo apt-get update
-          sudo apt-get install haskell-platform
-          git clone https://github.com/hadolint/hadolint
-          cd hadolint
-          stack install
-        shell: bash
-
       - name: Run hadolint on Dockerfiles
-        if: ${{ success() }}
         run: find . -name Dockerfile | xargs hadolint
         shell: bash
