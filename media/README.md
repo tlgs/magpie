@@ -1,4 +1,4 @@
-# airsonic
+# media
 
 Possible alternative to airsonic-advanced is
 [Navidrome](https://github.com/navidrome/navidrome/)
