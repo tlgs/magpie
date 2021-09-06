@@ -1,5 +1,7 @@
 # pihole
 
+TODO: move 11dc565 commit message content here or to the `core` stack
+
 ## unbound
 
 Generated `unbound.conf` with
