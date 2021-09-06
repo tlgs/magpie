@@ -10,8 +10,8 @@ jobs:
 
       - name: Install hadolint from source
         run: |
-          apt-get update
-          apt-get install haskell-platform
+          sudo apt-get update
+          sudo apt-get install haskell-platform
           curl -sSL https://get.haskellstack.org/ | sh
           git clone https://github.com/hadolint/hadolint
           cd hadolint
