@@ -33,7 +33,7 @@ services:
       - "/home/pi/pihole/etc-pihole/:/etc/pihole/"
       - "/home/pi/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/"
       - "/home/pi/pihole/var-log/pihole.log:/var/log/pihole.log"
-      - "./external.conf:/etc/lighttpd/external.conf"
+      - "./lighttpd-external.conf:/etc/lighttpd/external.conf"
     ports:
       - "53:53/tcp"
       - "53:53/udp"
