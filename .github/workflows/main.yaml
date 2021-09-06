@@ -1,0 +1,24 @@
+name: ci
+on:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v2
+
+      - name: Install hadolint from source
+        run: |
+          apt-get update
+          apt-get install haskell-platform
+          curl -sSL https://get.haskellstack.org/ | sh
+          git clone https://github.com/hadolint/hadolint
+          cd hadolint
+          stack install
+        shell: bash
+
+      - name: Run hadolint on Dockerfiles
+        if: ${{ success() }}
+        run: find . -name Dockerfile | xargs hadolint
+        shell: bash
