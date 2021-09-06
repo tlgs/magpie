@@ -1,4 +1,6 @@
-# cAdvisor
+# core
+
+## cAdvisor
 
 Currently an handmade image as there's no official ARM support for cAdvisor
 (see [#1236](https://github.com/google/cadvisor/issues/1236)).
