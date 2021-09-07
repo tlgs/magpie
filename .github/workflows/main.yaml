@@ -1,8 +1,11 @@
 name: ci
 on:
   workflow_dispatch:
+  push:
+    paths:
+      - '**/Dockerfile'
 jobs:
-  build:
+  hadolint:
     runs-on: ubuntu-latest
     container: hadolint/hadolint:latest-debian
     steps:
