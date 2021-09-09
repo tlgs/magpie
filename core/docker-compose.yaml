@@ -34,7 +34,7 @@ services:
       - "8081:9000"
     volumes:
       - "portainer_data:/data"
-      - "/var/run/docker.sock:/var/run/docker.sock" 
+      - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
       - traefik
     restart: unless-stopped
