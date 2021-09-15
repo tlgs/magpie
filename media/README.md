@@ -26,3 +26,11 @@ The current working solution involves changing the original Dockerfile to fetch
 the latest tagged version of the _entrypoint file_ and applying a patch.
 The patch was created by cloning the working fork and running
 `git diff v2.2.1..HEAD entrypoint.sh > entrypoint.patch`.
+
+### Client connection
+
+On Arch Linux:
+
+1. `sudo pacman -S nfs-utils`
+2. `sudo mkdir /mnt/magpie`
+3. `sudo mount -t nfs4 magpie.local:/ /mnt/magpie`
