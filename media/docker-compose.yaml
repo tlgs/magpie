@@ -3,7 +3,7 @@ version: "3"
 services:
   airsonic:
     container_name: airsonic
-    image: airsonicadvanced/airsonic-advanced
+    image: airsonicadvanced/airsonic-advanced:edge-11.0.0-SNAPSHOT.20210908073208
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.airsonic.rule=Host(`airsonic.magpie.local`)"
