@@ -2,9 +2,10 @@ FROM alpine:3.14
 
 # http://wiki.linux-nfs.org/wiki/index.php/Nfsv4_configuration
 RUN apk --update --no-cache add \
-      bash=5.1.8-r0 \
-      nfs-utils=2.5.3-r1 \
-      curl=7.78.0-r0 \
+      bash=~5.1.4-r0 \
+      nfs-utils=~2.5.3-r0 \
+      curl=~7.79.0-r0 \
+      patch=~2.7.6-r7 \
     && rm -v /etc/idmapd.conf /etc/exports \
     && mkdir -p /var/lib/nfs/rpc_pipefs \
     && mkdir -p /var/lib/nfs/v4recovery \
@@ -18,7 +19,8 @@ COPY ./entrypoint.patch /usr/local/bin/entrypoint.patch
 WORKDIR /usr/local/bin
 
 RUN curl -o entrypoint.sh https://raw.githubusercontent.com/ehough/docker-nfs-server/v2.2.1/entrypoint.sh \
-    && patch < entrypoint.patch
+    && patch < entrypoint.patch \
+    && chmod +x entrypoint.sh
 
 EXPOSE 2049
 
