@@ -61,26 +61,6 @@ services:
       - traefik
     restart: unless-stopped
 
-  prometheus:
-    container_name: prometheus
-    image: prom/prometheus
-    depends_on:
-      - cadvisor
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.prometheus.rule=Host(`prometheus.magpie.local`)"
-      - "traefik.http.services.prometheus.loadbalancer.server.port=9090"
-    command:
-      - "--config.file=/etc/prometheus/prometheus.yml"
-    ports:
-      - "8083:9090"
-    volumes:
-      - "./prometheus.yaml:/etc/prometheus/prometheus.yml:ro"
-      - "prometheus_data:/prometheus"
-    networks:
-      - traefik
-    restart: unless-stopped
-
 networks:
   traefik:
     name: traefik
@@ -88,5 +68,3 @@ networks:
 volumes:
   portainer_data:
     name: portainer_data
-  prometheus_data:
-    name: prometheus_data
