@@ -3,9 +3,8 @@ version: "3"
 services:
   pihole:
     container_name: pihole
-    image: pihole/pihole
+    image: pihole/pihole:2021.09
     depends_on:
-      - dhcp-helper
       - unbound
     labels:
       - "traefik.enable=true"
@@ -13,19 +12,11 @@ services:
       - "traefik.http.routers.pihole.rule=Host(`pihole.magpie.local`)"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
     hostname: mag-pihole
-    cap_add:
-      - NET_ADMIN
     environment:
       TZ: Europe/Dublin
-      PIHOLE_DNS_: 172.20.0.53#5335;172.20.0.53#5335
       ServerIP: 192.168.0.69
+      PIHOLE_DNS_: 172.20.0.53#5335;172.20.0.53#5335
       DNSMASQ_LISTENING: all
-      DHCP_ACTIVE: "true"
-      DHCP_START: 192.168.0.100
-      DHCP_END: 192.168.0.249
-      DHCP_ROUTER: 192.168.0.1
-      DHCP_LEASETIME: 2
-      PIHOLE_DOMAIN: none
     dns:
       - 127.0.0.1
       - 172.20.0.53
@@ -40,25 +31,13 @@ services:
       - "8084:80/tcp"
     networks:
       traefik:
-      dhcp_relay:
-        ipv4_address: 172.31.0.100
       dns_net:
         ipv4_address: 172.20.0.100
     restart: unless-stopped
 
-  dhcp-helper:
-    container_name: dhcp-helper
-    build: ./dhcp-helper
-    image: dhcp-helper
-    command: -s 172.31.0.100
-    cap_add:
-      - NET_ADMIN
-    network_mode: host
-    restart: unless-stopped
-
   unbound:
     container_name: unbound
-    image: mvance/unbound-rpi
+    image: mvance/unbound-rpi:1.13.1
     ports:
       - "5335:5335/tcp"
       - "5335:5335/udp"
@@ -75,11 +54,6 @@ services:
     restart: unless-stopped
 
 networks:
-  dhcp_relay:
-    name: dhcp_relay
-    ipam:
-      config:
-        - subnet: 172.31.0.0/16
   dns_net:
     name: dns_net
     ipam:
