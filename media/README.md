@@ -31,6 +31,6 @@ The patch was created by cloning the working fork and running
 
 On Arch Linux:
 
-1. `sudo pacman -S nfs-utils`
-2. `sudo mkdir /mnt/magpie`
-3. `sudo mount -t nfs4 magpie.local:/ /mnt/magpie`
+1. `# pacman -S nfs-utils`
+2. `# mkdir /mnt/magpie`
+3. `# mount -t nfs4 magpie.local:/ /mnt/magpie`
