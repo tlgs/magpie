@@ -20,7 +20,7 @@ services:
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
-      - traefik
+      - traefik_net
     restart: unless-stopped
 
   portainer:
@@ -36,7 +36,7 @@ services:
       - "portainer_data:/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
     networks:
-      - traefik
+      - traefik_net
     restart: unless-stopped
 
   cadvisor:
@@ -58,12 +58,12 @@ services:
     devices:
       - "/dev/kmsg:/dev/kmsg"
     networks:
-      - traefik
+      - traefik_net
     restart: unless-stopped
 
 networks:
-  traefik:
-    name: traefik
+  traefik_net:
+    name: traefik_net
 
 volumes:
   portainer_data:

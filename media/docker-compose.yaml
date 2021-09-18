@@ -20,7 +20,7 @@ services:
     ports:
       - "4040:4040"
     networks:
-      - traefik
+      - traefik_net
     restart: unless-stopped
 
   nfs-server:
@@ -39,9 +39,9 @@ services:
     ports:
       - 2049:2049
     networks:
-      - traefik
+      - traefik_net
     restart: unless-stopped
 
 networks:
-  traefik:
+  traefik_net:
     external: true

@@ -31,7 +31,7 @@ services:
       - "53:53/udp"
       - "8084:80/tcp"
     networks:
-      traefik:
+      traefik_net:
       dns_net:
         ipv4_address: 172.20.0.100
     restart: unless-stopped
@@ -60,5 +60,5 @@ networks:
     ipam:
       config:
         - subnet: 172.20.0.0/16
-  traefik:
+  traefik_net:
     external: true
