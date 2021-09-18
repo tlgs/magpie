@@ -3,7 +3,7 @@ version: "3"
 services:
   traefik:
     container_name: traefik
-    image: traefik
+    image: traefik:2.5
     command:
       - "--api.dashboard=true"
       - "--api.insecure=true"
@@ -25,7 +25,7 @@ services:
 
   portainer:
     container_name: portainer
-    image: portainer/portainer-ce
+    image: portainer/portainer-ce:2.6.3
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.portainer.rule=Host(`portainer.magpie.local`)"
