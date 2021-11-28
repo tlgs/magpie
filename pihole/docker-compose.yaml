@@ -3,7 +3,7 @@ version: "3"
 services:
   pihole:
     container_name: pihole
-    image: pihole/pihole:2021.09
+    image: pihole/pihole:2021.11
     depends_on:
       - unbound
     labels:
@@ -17,12 +17,11 @@ services:
       - NET_ADMIN
     environment:
       TZ: Europe/Dublin
-      ServerIP: 192.168.0.69
+      FTLCONF_REPLY_ADDR4: 192.168.0.69
       PIHOLE_DNS_: 172.20.0.53#5053;172.20.0.53#5053
-      DNSMASQ_LISTENING: all
     dns:
       - 127.0.0.1
-      - 172.20.0.53
+      - 1.1.1.1
     volumes:
       - "/home/pi/pihole/etc-pihole/:/etc/pihole/"
       - "/home/pi/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/"
