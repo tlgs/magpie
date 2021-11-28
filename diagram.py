@@ -6,7 +6,7 @@ with Diagram("magpie", filename="assets/architecture", direction="TB", show=Fals
     with Cluster("core"):
         traefik = Traefik("traefik")
         portainer = Docker("portainer")
-        cadvisor = Docker("cadvisor")
+        cadvisor = Docker("cadvisor", fontcolor="crimson")
 
     with Cluster("pihole"):
         pihole = Docker("pihole")
@@ -14,7 +14,7 @@ with Diagram("magpie", filename="assets/architecture", direction="TB", show=Fals
 
     with Cluster("media"):
         airsonic = Docker("airsonic")
-        nfs = Docker("nfs-server")
+        nfs = Docker("nfs-server", fontcolor="crimson")
 
     all_nodes = {
         traefik,
