@@ -39,20 +39,15 @@ services:
 
   unbound:
     container_name: unbound
-    image: mvance/unbound-rpi:1.13.1
+    image: klutchell/unbound:1.13.2
     ports:
-      - "5335:5335/tcp"
-      - "5335:5335/udp"
-    volumes:
-      - "./unbound.conf:/opt/unbound/etc/unbound/unbound.conf:ro"
+      - "5053:5053/tcp"
+      - "5053:5053/udp"
     networks:
        dns_net:
          ipv4_address: 172.20.0.53
     healthcheck:
-      test: ["CMD", "drill", "@127.0.0.1", "-p", "5335", "cloudflare.com", "||", "exit", "1"]
-      interval: 5s
-      timeout: 3s
-      start_period: 5s
+      test: ["CMD", "drill", "@127.0.0.1", "-Qp", "5053", "nlnetlabs.nl", "||", "exit", "1"]
     restart: unless-stopped
 
 networks:
