@@ -18,7 +18,7 @@ services:
     environment:
       TZ: Europe/Dublin
       ServerIP: 192.168.0.69
-      PIHOLE_DNS_: 172.20.0.53#5335;172.20.0.53#5335
+      PIHOLE_DNS_: 172.20.0.53#5053;172.20.0.53#5053
       DNSMASQ_LISTENING: all
     dns:
       - 127.0.0.1
@@ -47,7 +47,7 @@ services:
        dns_net:
          ipv4_address: 172.20.0.53
     healthcheck:
-      test: ["CMD", "drill", "@127.0.0.1", "-Qp", "5053", "nlnetlabs.nl", "||", "exit", "1"]
+      test: ["CMD", "drill", "-Qp", "5053", "nlnetlabs.nl", "@127.0.0.1",  "||", "exit", "1"]
     restart: unless-stopped
 
 networks:
