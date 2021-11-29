@@ -9,6 +9,12 @@ Together, these services provide an _All-Around DNS Solution_;
 their need and usefulness is best described in
 [this page](https://docs.pi-hole.net/guides/dns/unbound/) of Pi-hole's documentation.
 
+| Environment variable | Description                                                                         |
+| -------------------- | ----------------------------------------------------------------------------------- |
+| TZ                   | Timezone (see [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)) |
+| PIHOLE\_WEBPASSWORD  | Pi-hole admin panel password                                                        |
+| HOST\_IP             | Host IP address                                                                     |
+
 ## Notes
 
 - Both images are pretty well documented so the setup is relatively straightforward.

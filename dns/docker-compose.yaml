@@ -18,7 +18,7 @@ services:
     environment:
       TZ: "${TZ}"
       WEBPASSWORD: "${PIHOLE_WEBPASSWORD}"
-      FTLCONF_REPLY_ADDR4: 192.168.0.69
+      FTLCONF_REPLY_ADDR4: "${HOST_IP}"
       PIHOLE_DNS_: 172.20.0.53#5053;172.20.0.53#5053
     dns:
       - 127.0.0.1
@@ -31,15 +31,14 @@ services:
       - "53:53/udp"
       - "8084:80/tcp"
     networks:
-      traefik_net:
-      dns_net:
-        ipv4_address: 172.20.0.100
+      - traefik_net
+      - dns_net
     extra_hosts:
-      - "traefik.magpie.local:192.168.0.69"
-      - "portainer.magpie.local:192.168.0.69"
-      - "cadvisor.magpie.local:192.168.0.69"
-      - "pihole.magpie.local:192.168.0.69"
-      - "airsonic.magpie.local:192.168.0.69"
+      - "traefik.magpie.local:${HOST_IP}"
+      - "portainer.magpie.local:${HOST_IP}"
+      - "cadvisor.magpie.local:${HOST_IP}"
+      - "pihole.magpie.local:${HOST_IP}"
+      - "airsonic.magpie.local:${HOST_IP}"
     restart: unless-stopped
 
   unbound:
