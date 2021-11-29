@@ -16,7 +16,7 @@ services:
     cap_add:
       - NET_ADMIN
     environment:
-      TZ: Europe/Dublin
+      TZ: "${TZ}"
       WEBPASSWORD: "${PIHOLE_WEBPASSWORD}"
       FTLCONF_REPLY_ADDR4: 192.168.0.69
       PIHOLE_DNS_: 172.20.0.53#5053;172.20.0.53#5053
