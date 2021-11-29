@@ -9,6 +9,8 @@ Together, these services provide an _All-Around DNS Solution_;
 their need and usefulness is best described in
 [this page](https://docs.pi-hole.net/guides/dns/unbound/) of Pi-hole's documentation.
 
+Expected environment variables in `.env`:
+
 | Environment variable | Description                                                                         |
 | -------------------- | ----------------------------------------------------------------------------------- |
 | TZ                   | Timezone (see [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)) |
