@@ -23,9 +23,8 @@ services:
       - 127.0.0.1
       - 1.1.1.1
     volumes:
-      - "/home/pi/pihole/etc-pihole/:/etc/pihole/"
-      - "/home/pi/pihole/etc-dnsmasq.d/:/etc/dnsmasq.d/"
-      - "/home/pi/pihole/var-log/pihole.log:/var/log/pihole.log"
+      - "etc-pihole:/etc/pihole/"
+      - "etc-dnsmasq.d:/etc/dnsmasq.d/"
     ports:
       - "53:53/tcp"
       - "53:53/udp"
@@ -54,6 +53,14 @@ networks:
     name: dns_net
     ipam:
       config:
-        - subnet: 172.20.0.0/16
+        - subnet: 172.20.0.0/24
+
   traefik_net:
     external: true
+
+volumes:
+  etc-pihole:
+    name: etc-pihole
+
+  etc-dnsmasq.d:
+    name: etc-dnsmasq.d
