@@ -1,16 +1,15 @@
 from diagrams import Cluster, Diagram
 from diagrams.onprem.container import Docker
-from diagrams.onprem.network import Traefik
 
 with Diagram("magpie", filename="assets/architecture", direction="TB", show=False):
     with Cluster("core"):
-        traefik = Traefik("traefik")
+        traefik = Docker("traefik")
         portainer = Docker("portainer")
         cadvisor = Docker("cadvisor", fontcolor="crimson")
 
-    with Cluster("pihole"):
+    with Cluster("dns"):
         pihole = Docker("pihole")
-        unbound = Docker("unbound-rpi")
+        unbound = Docker("unbound")
 
     with Cluster("media"):
         airsonic = Docker("airsonic")
@@ -30,4 +29,4 @@ with Diagram("magpie", filename="assets/architecture", direction="TB", show=Fals
     # cadvisor << list(all_nodes)
     # portainer - list(all_nodes)
 
-    pihole << unbound
+    pihole - unbound
