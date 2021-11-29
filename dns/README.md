@@ -18,5 +18,6 @@ their need and usefulness is best described in
   [#315](https://github.com/pi-hole/docker-pi-hole/issues/315)).
 - This stack creates the `dns_net` network as `unbound` really only needs to talk to `pihole`
   and does not need to be exposed to the frontend network.
+- Makes use of `extra_hosts` to include Local DNS entries.
 - The `pihole` service uses a [Traefik middleware](https://doc.traefik.io/traefik/middlewares/overview/)
   to redirect to `/admin`.
