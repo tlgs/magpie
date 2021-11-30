@@ -34,6 +34,7 @@ services:
       - traefik_net
       - dns_net
     extra_hosts:
+      - "magpie.local:${HOST_IP}"
       - "traefik.magpie.local:${HOST_IP}"
       - "portainer.magpie.local:${HOST_IP}"
       - "cadvisor.magpie.local:${HOST_IP}"
