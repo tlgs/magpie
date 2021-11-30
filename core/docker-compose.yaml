@@ -3,7 +3,7 @@ version: "3"
 services:
   traefik:
     container_name: traefik
-    image: traefik:2.5
+    image: traefik:v2.5.4
     command:
       - "--api.dashboard=true"
       - "--api.insecure=true"
@@ -18,23 +18,23 @@ services:
       - "80:80"
       - "8080:8080"
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
       - traefik_net
     restart: unless-stopped
 
   portainer:
     container_name: portainer
-    image: portainer/portainer-ce:2.6.3
+    image: portainer/portainer-ce:2.9.3
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.portainer.rule=Host(`portainer.magpie.local`)"
-      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      - "traefik.http.services.portainer.loadbalancer.server.port=9443"
     ports:
-      - "8081:9000"
+      - "8081:9443"
     volumes:
-      - "portainer_data:/data"
       - "/var/run/docker.sock:/var/run/docker.sock"
+      - "portainer_data:/data"
     networks:
       - traefik_net
     restart: unless-stopped
