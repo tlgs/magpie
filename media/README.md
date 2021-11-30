@@ -1,5 +1,14 @@
 # media
 
+- [`airsonic-advanced`](https://github.com/airsonic-advanced/airsonic-advanced) is a streaming audio server
+- `nfs-server` is an [NFS](https://en.wikipedia.org/wiki/Network_File_System) server (duh!)
+
+| Environment variable | Description                                                                         |
+| -------------------- | ----------------------------------------------------------------------------------- |
+| TZ                   | Timezone (see [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)) |
+
+## airsonic-advanced
+
 Possible alternative to airsonic-advanced is
 [Navidrome](https://github.com/navidrome/navidrome/)
 once Sonos is supported [(#165)](https://github.com/navidrome/navidrome/issues/165).
