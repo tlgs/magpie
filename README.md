@@ -4,9 +4,8 @@ magpie is a simple homelab setup - a bunch of Docker services
 deployed on a single host:
 
 -  [Raspberry Pi 4 model B (rev 1.1)](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/)
-  running `Raspberry Pi OS Lite - buster`
+  running Raspberry Pi OS Lite
 - 64Gb SD Card
-- ~~Decent power source~~
 
 Below is a diagram of the Docker Compose stacks and respective containers:
 
