@@ -29,6 +29,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.portainer.rule=Host(`portainer.magpie.local`)"
+      - "traefik.http.routers.portainer.middlewares=https-redirect"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.https-redirect.redirectscheme.permanent=true"
       - "traefik.http.services.portainer.loadbalancer.server.port=9443"
     ports:
       - "8081:9443"
