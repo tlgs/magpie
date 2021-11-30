@@ -3,14 +3,13 @@ version: "3"
 services:
   airsonic:
     container_name: airsonic
-    image: airsonicadvanced/airsonic-advanced:edge-11.0.0-SNAPSHOT.20210908073208
+    image: airsonicadvanced/airsonic-advanced:edge-11.0.0-SNAPSHOT.20211119194245
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.airsonic.rule=Host(`airsonic.magpie.local`)"
       - "traefik.http.services.airsonic.loadbalancer.server.port=4040"
+    user: 1000:1000
     environment:
-      PUID: 1000
-      PGID: 1000
       TZ: ${TZ}
     volumes:
       - "${HOME}/airsonic/data:/var/airsonic"
