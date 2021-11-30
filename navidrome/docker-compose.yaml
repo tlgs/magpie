@@ -1,0 +1,40 @@
+version: "3"
+
+services:
+  navidrome:
+    container_name: navidrome
+    image: deluan/navidrome:0.47.0
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.navidrome.rule=Host(`navidrome.magpie.local`)"
+      - "traefik.http.services.navidrome.loadbalancer.server.port=4533"
+    user: 1000:1000
+    volumes:
+      - "${HOME}/navidrome/data:/data"
+      - "${HOME}/airsonic/music:/music:ro"
+    ports:
+      - "4533:4533"
+    networks:
+      - traefik_net
+    restart: unless-stopped
+
+  bonob:
+    container_name: bonob
+    image: simojenki/bonob:v0.5.0
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.bonob.rule=Host(`bonob.magpie.local`)"
+      - "traefik.http.services.bonob.loadbalancer.server.port=4534"
+    environment:
+      BNB_SONOS_AUTO_REGISTER: "true"
+      BNB_SONOS_DEVICE_DISCOVERY: "true"
+      BNB_SUBSONIC_URL: "http://navidrome.magpie.local"
+    ports:
+      - "4534:4534"
+    networks:
+      - traefik_net
+    restart: unless-stopped
+
+networks:
+  traefik_net:
+    external: true

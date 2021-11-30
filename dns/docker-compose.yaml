@@ -23,6 +23,15 @@ services:
     dns:
       - 127.0.0.1
       - 1.1.1.1
+    extra_hosts:
+      - "magpie.local:${HOST_IP}"
+      - "traefik.magpie.local:${HOST_IP}"
+      - "portainer.magpie.local:${HOST_IP}"
+      - "cadvisor.magpie.local:${HOST_IP}"
+      - "pihole.magpie.local:${HOST_IP}"
+      - "airsonic.magpie.local:${HOST_IP}"
+      - "navidrome.magpie.local:${HOST_IP}"
+      - "bonob.magpie.local:${HOST_IP}"
     volumes:
       - "etc-pihole:/etc/pihole/"
       - "etc-dnsmasq.d:/etc/dnsmasq.d/"
@@ -33,13 +42,6 @@ services:
     networks:
       - traefik_net
       - dns_net
-    extra_hosts:
-      - "magpie.local:${HOST_IP}"
-      - "traefik.magpie.local:${HOST_IP}"
-      - "portainer.magpie.local:${HOST_IP}"
-      - "cadvisor.magpie.local:${HOST_IP}"
-      - "pihole.magpie.local:${HOST_IP}"
-      - "airsonic.magpie.local:${HOST_IP}"
     restart: unless-stopped
 
   unbound:
