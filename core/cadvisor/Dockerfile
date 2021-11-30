@@ -1,6 +1,6 @@
 FROM arm32v7/golang:1.17.0-bullseye AS build
 
-ENV CADVISOR_VERSION "v0.43.0"
+ENV CADVISOR_VERSION "v0.39.2"
 
 WORKDIR /go/src/github.com/google/cadvisor
 
