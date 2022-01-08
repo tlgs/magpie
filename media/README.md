@@ -1,7 +1,8 @@
 # media
 
-- [`navidrome`]()
-- [`bonob`]()
+- [`navidrome`](https://github.com/navidrome/navidrome) is a music streaming server
+- [`bonob`](https://github.com/simojenki/bonob) is a Sonos Music API implementation
+  (bridges Sonos and Navidrome)
 - `nfs-server` is an [NFS](https://en.wikipedia.org/wiki/Network_File_System) server (duh!)
 
 Expected environment variables in `.env`:
@@ -14,15 +15,16 @@ Expected environment variables in `.env`:
 | SONOS\_IP            | Sonos device IP address                                                             |
 | HOST\_IP             | Host IP address                                                                     |
 
-## bonob
+## Notes
 
+- Navidrome requires `SPOTIFY_{ID,SECRET}` to fetch artist images.
 - bonob cannot see `http://navidrome.magpie.local`, hence the `extra_hosts`
   workaround and the need for `HOST_IP`.
 
-## nfs-server
+### nfs-server
 
 The [`erichough/nfs-server`](https://github.com/ehough/docker-nfs-server)
-is the most versatile NFS server solution in Docker;
+image is the most versatile NFS server solution for Docker;
 however, it suffers from a couple of big problems:
 
 - no ARM image
@@ -40,7 +42,7 @@ the latest tagged version of the _entrypoint file_ and applying a patch.
 The patch was created by cloning the working fork and running
 `git diff v2.2.1..HEAD entrypoint.sh > entrypoint.patch`.
 
-### Client connection
+#### Client connection
 
 On Arch Linux:
 
