@@ -1,6 +1,7 @@
 # media
 
-- [`airsonic-advanced`](https://github.com/airsonic-advanced/airsonic-advanced) is a streaming audio server
+- [`navidrome`]()
+- [`bonob`]()
 - `nfs-server` is an [NFS](https://en.wikipedia.org/wiki/Network_File_System) server (duh!)
 
 Expected environment variables in `.env`:
@@ -8,14 +9,15 @@ Expected environment variables in `.env`:
 | Environment variable | Description                                                                         |
 | -------------------- | ----------------------------------------------------------------------------------- |
 | TZ                   | Timezone (see [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)) |
+| SPOTIFY\_ID          | Spotify client ID                                                                   |
+| SPOTIFY\_SECRET      | Spotify client secret                                                               |
+| SONOS\_IP            | Sonos device IP address                                                             |
+| HOST\_IP             | Host IP address                                                                     |
 
-## airsonic-advanced
+## bonob
 
-Possible alternative to airsonic-advanced is
-[Navidrome](https://github.com/navidrome/navidrome/)
-once Sonos is supported [(#165)](https://github.com/navidrome/navidrome/issues/165).
-Note that Sonos support can be achieved by a
-[separate service](https://github.com/simojenki/bonob).
+- bonob cannot see `http://navidrome.magpie.local`, hence the `extra_hosts`
+  workaround and the need for `HOST_IP`.
 
 ## nfs-server
 
