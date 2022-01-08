@@ -3,20 +3,19 @@ version: "3"
 services:
   airsonic:
     container_name: airsonic
-    image: airsonicadvanced/airsonic-advanced:edge-11.0.0-SNAPSHOT.20210908073208
+    image: airsonicadvanced/airsonic-advanced:edge-11.0.0-SNAPSHOT.20211119194245
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.airsonic.rule=Host(`airsonic.magpie.local`)"
       - "traefik.http.services.airsonic.loadbalancer.server.port=4040"
+    user: 1000:1000
     environment:
-      PUID: 1000
-      PGID: 1000
-      TZ: Europe/Dublin
+      TZ: ${TZ}
     volumes:
-      - "/home/pi/airsonic/data:/var/airsonic"
-      - "/home/pi/airsonic/music:/var/music"
-      - "/home/pi/airsonic/playlists:/var/playlists"
-      - "/home/pi/airsonic/podcasts:/var/podcasts"
+      - "${HOME}/airsonic/data:/var/airsonic"
+      - "${HOME}/airsonic/music:/var/music"
+      - "${HOME}/airsonic/playlists:/var/playlists"
+      - "${HOME}/airsonic/podcasts:/var/podcasts"
     ports:
       - "4040:4040"
     networks:
@@ -33,9 +32,9 @@ services:
     environment:
       NFS_DISABLE_VERSION_3: 1
     volumes:
-      - "/home/pi/airsonic/music:/nfs-music"
-      - "./nfs-exports.txt:/etc/exports:ro"
       - "/lib/modules:/lib/modules:ro"
+      - "./nfs-exports.txt:/etc/exports:ro"
+      - "${HOME}/airsonic/music:/music"
     ports:
       - 2049:2049
     networks:

@@ -1,32 +1,43 @@
-from diagrams import Cluster, Diagram
+from diagrams import Cluster, Diagram, Edge
+from diagrams.onprem.client import Users
 from diagrams.onprem.container import Docker
+from diagrams.onprem.network import Traefik
 
-with Diagram("magpie", filename="assets/architecture", direction="TB", show=False):
-    with Cluster("core"):
-        traefik = Docker("traefik")
-        portainer = Docker("portainer")
-        cadvisor = Docker("cadvisor", fontcolor="crimson")
+http = Edge(color="#005B9C")
+dns = Edge(color="#F5821F")
+nfs = Edge(color="#5484A4")
 
-    with Cluster("dns"):
-        pihole = Docker("pihole")
-        unbound = Docker("unbound")
+graph_attr = {
+    "splines": "spline",
+}
 
-    with Cluster("media"):
-        airsonic = Docker("airsonic")
-        nfs = Docker("nfs-server", fontcolor="crimson")
+with Diagram(
+    "",
+    filename="assets/architecture",
+    direction="TB",
+    show=False,
+    graph_attr=graph_attr,
+):
+    users = Users("users")
 
-    all_nodes = {
-        traefik,
-        portainer,
-        cadvisor,
-        pihole,
-        unbound,
-        airsonic,
-        nfs,
-    }
+    with Cluster("magpie"):
+        with Cluster("dns"):
+            pihole = Docker("pihole")
+            unbound = Docker("unbound")
 
-    traefik >> list(all_nodes - {unbound, nfs})
-    # cadvisor << list(all_nodes)
-    # portainer - list(all_nodes)
+        with Cluster("core"):
+            traefik = Traefik("traefik")
+            portainer = Docker("portainer")
+            cadvisor = Docker("cadvisor*")
 
-    pihole - unbound
+        with Cluster("media"):
+            airsonic = Docker("airsonic")
+            nfs_server = Docker("nfs-server*")
+
+    traefik >> http >> [traefik, portainer, cadvisor, pihole, airsonic]
+
+    pihole >> dns >> unbound
+
+    users >> http >> traefik
+    users >> dns >> pihole
+    users >> nfs >> nfs_server
