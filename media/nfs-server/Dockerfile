@@ -1,10 +1,10 @@
-FROM alpine:3.14
+FROM alpine:3.15
 
 # http://wiki.linux-nfs.org/wiki/index.php/Nfsv4_configuration
 RUN apk --update --no-cache add \
-      bash=~5.1.4-r0 \
-      nfs-utils=~2.5.3-r0 \
-      curl=~7.79.0-r0 \
+      bash=~5.1.8-r0 \
+      nfs-utils=~2.5.4-r1 \
+      curl=~7.80.0-r0 \
       patch=~2.7.6-r7 \
     && rm -v /etc/idmapd.conf /etc/exports \
     && mkdir -p /var/lib/nfs/rpc_pipefs \
