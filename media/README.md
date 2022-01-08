@@ -1,8 +1,9 @@
 # media
 
 - [`navidrome`](https://github.com/navidrome/navidrome) is a music streaming server
-- [`bonob`](https://github.com/simojenki/bonob) is a Sonos Music API implementation
-  (bridges Sonos and Navidrome)
+- [`bonob`](https://github.com/simojenki/bonob) is an
+  [SMAPI](https://developer.sonos.com/reference/sonos-music-api/) implementation,
+  bridges Sonos devices and Navidrome
 - `nfs-server` is an [NFS](https://en.wikipedia.org/wiki/Network_File_System) server (duh!)
 
 Expected environment variables in `.env`:
