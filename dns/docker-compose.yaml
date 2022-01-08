@@ -32,13 +32,13 @@ services:
       - "airsonic.magpie.local:${HOST_IP}"
       - "navidrome.magpie.local:${HOST_IP}"
       - "bonob.magpie.local:${HOST_IP}"
-    volumes:
-      - "etc-pihole:/etc/pihole/"
-      - "etc-dnsmasq.d:/etc/dnsmasq.d/"
     ports:
       - "53:53/tcp"
       - "53:53/udp"
-      - "8084:80/tcp"
+      - "8090:80/tcp"
+    volumes:
+      - "etc-pihole:/etc/pihole/"
+      - "etc-dnsmasq.d:/etc/dnsmasq.d/"
     networks:
       - traefik_net
       - dns_net

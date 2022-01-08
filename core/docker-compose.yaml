@@ -23,6 +23,20 @@ services:
       - traefik_net
     restart: unless-stopped
 
+  homer:
+    container_name: homer
+    image: b4bz/homer:21.09.2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.homer.rule=Host(`magpie.local`)"
+      - "traefik.http.services.homer.loadbalancer.server.port=8080"
+    user: 1000:1000
+    ports:
+      - "8081:8080"
+    volumes:
+      - "./homer-assets/:/www/assets"
+    restart: unless-stopped
+
   portainer:
     container_name: portainer
     image: portainer/portainer-ce:2.9.3
@@ -31,7 +45,7 @@ services:
       - "traefik.http.routers.portainer.rule=Host(`portainer.magpie.local`)"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
     ports:
-      - "8081:9000"
+      - "8082:9000"
     volumes:
       - "/var/run/docker.sock:/var/run/docker.sock"
       - "portainer_data:/data"
@@ -48,7 +62,7 @@ services:
       - "traefik.http.routers.cadvisor.rule=Host(`cadvisor.magpie.local`)"
       - "traefik.http.services.cadvisor.loadbalancer.server.port=8080"
     ports:
-      - "8082:8080"
+      - "8083:8080"
     volumes:
       - "/:/rootfs:ro"
       - "/var/run:/var/run:ro"
