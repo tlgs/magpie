@@ -6,6 +6,12 @@ repos:
       - id: end-of-file-fixer
       - id: trailing-whitespace
 
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.17.0
+    hooks:
+      - id: yamllint
+        args: ['-d', '{extends: default, rules: {document-start: {present: false}, line-length: {max: 120}}}']
+
   - repo: https://github.com/hadolint/hadolint
     rev: v2.8.0
     hooks:
