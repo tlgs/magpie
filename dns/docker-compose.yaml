@@ -30,7 +30,6 @@ services:
       - "portainer.magpie.local:${HOST_IP}"
       - "cadvisor.magpie.local:${HOST_IP}"
       - "pihole.magpie.local:${HOST_IP}"
-      - "airsonic.magpie.local:${HOST_IP}"
       - "navidrome.magpie.local:${HOST_IP}"
       - "bonob.magpie.local:${HOST_IP}"
     ports:
