@@ -36,7 +36,10 @@ services:
       BNB_SONOS_DEVICE_DISCOVERY: "true"
       BNB_SONOS_SEED_HOST: "${SONOS_IP}"
       BNB_SUBSONIC_URL: "http://navidrome.magpie.local"
+      BNB_SUBSONIC_ARTIST_IMAGE_CACHE: "/navidrome-data/cache/images"
       TZ: "${TZ}"
+    volumes:
+            - "${HOME}/navidrome/data:/navidrome-data:ro"
     extra_hosts:
       - "navidrome.magpie.local:${HOST_IP}"
     ports:
@@ -56,7 +59,7 @@ services:
       NFS_DISABLE_VERSION_3: 1
     volumes:
       - "/lib/modules:/lib/modules:ro"
-      - "./nfs-exports.txt:/etc/exports:ro"
+      - "./nfs-server/exports.txt:/etc/exports:ro"
       - "${HOME}/music:/music"
     ports:
       - 2049:2049
