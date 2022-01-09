@@ -1,5 +1,5 @@
 from diagrams import Cluster, Diagram, Edge
-from diagrams.onprem.client import Client, Users
+from diagrams.onprem.client import Users
 from diagrams.onprem.container import Docker
 from diagrams.onprem.network import Traefik
 
@@ -19,7 +19,6 @@ with Diagram(
     graph_attr=graph_attr,
 ):
     users = Users("users")
-    sonos = Client("Sonos speaker")
 
     with Cluster("magpie"):
         with Cluster("dns"):
@@ -28,6 +27,7 @@ with Diagram(
 
         with Cluster("core"):
             traefik = Traefik("traefik")
+            homer = Docker("homer")
             portainer = Docker("portainer")
             cadvisor = Docker("cadvisor*")
 
@@ -36,7 +36,7 @@ with Diagram(
             bonob = Docker("bonob")
             nfs_server = Docker("nfs-server*")
 
-    traefik >> http >> [traefik, portainer, cadvisor, pihole, navidrome]
+    traefik >> http >> [traefik, homer, portainer, cadvisor, pihole, bonob, navidrome]
 
     pihole >> dns >> unbound
     bonob >> http >> navidrome
@@ -44,4 +44,3 @@ with Diagram(
     users >> http >> traefik
     users >> dns >> pihole
     users >> nfs >> nfs_server
-    sonos >> http >> bonob
