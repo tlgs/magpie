@@ -42,7 +42,8 @@ services:
       - "8081:8080"
     volumes:
       - "homer_data:/www/assets"
-      - "./homer.yml:/www/assets/config.yml:ro"
+      - "./homer.yaml:/www/assets/config.yml:ro"
+      - "./homer.css:/www/assets/custom.css:ro"
     networks:
       - traefik_net
     restart: unless-stopped
