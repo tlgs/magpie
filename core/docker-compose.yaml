@@ -5,8 +5,8 @@ services:
     container_name: traefik
     image: traefik:v2.5.4
     command:
+      - "--ping=true"
       - "--api.dashboard=true"
-      - "--api.insecure=true"
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
@@ -14,6 +14,14 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.magpie.local`)"
       - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik-ping.rule=Host(`traefik.magpie.local`) && Method(`Head`) && Path(`/`)"
+      - "traefik.http.routers.traefik-ping.middlewares=homer-cors"
+      - "traefik.http.routers.traefik-ping.service=ping@internal"
+      - "traefik.http.middlewares.homer-cors.headers.accesscontrolallowcredentials=true"
+      - "traefik.http.middlewares.homer-cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
+      - "traefik.http.middlewares.homer-cors.headers.accesscontrolalloworiginlist=http://magpie.local"
+      - "traefik.http.middlewares.homer-cors.headers.accesscontrolmaxage=100"
+      - "traefik.http.middlewares.homer-cors.headers.addvaryheader=true"
     ports:
       - "80:80"
       - "8080:8080"
@@ -30,11 +38,13 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.homer.rule=Host(`magpie.local`)"
       - "traefik.http.services.homer.loadbalancer.server.port=8080"
-    user: 1000:1000
     ports:
       - "8081:8080"
     volumes:
-      - "./homer-assets/:/www/assets"
+      - "homer_data:/www/assets"
+      - "./homer.yml:/www/assets/config.yml:ro"
+    networks:
+      - traefik_net
     restart: unless-stopped
 
   portainer:
@@ -43,6 +53,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.portainer.rule=Host(`portainer.magpie.local`)"
+      - "traefik.http.routers.portainer.middlewares=homer-cors"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
     ports:
       - "8082:9000"
@@ -60,6 +71,7 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.cadvisor.rule=Host(`cadvisor.magpie.local`)"
+      - "traefik.http.routers.cadvisor.middlewares=homer-cors"
       - "traefik.http.services.cadvisor.loadbalancer.server.port=8080"
     ports:
       - "8083:8080"
@@ -80,5 +92,8 @@ networks:
     name: traefik_net
 
 volumes:
+  homer_data:
+    name: homer_data
+
   portainer_data:
     name: portainer_data

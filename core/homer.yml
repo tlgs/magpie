@@ -1,0 +1,37 @@
+title: "magpie"
+subtitle: "homelab"
+
+header: false
+footer: ""
+
+columns: "3"
+connectivityCheck: false
+
+theme: "default"
+
+services:
+  - items:
+    - name: "Traefik"
+      url: "http://traefik.magpie.local"
+      endpoint: "http://traefik.magpie.local/ping"
+      logo: "https://github.com/NX211/homer-icons/raw/master/png/traefik.png"
+      type: "Ping"
+
+    - name: "Portainer"
+      url: "http://portainer.magpie.local"
+      logo: "https://github.com/NX211/homer-icons/raw/master/png/portainer.png"
+      type: "Ping"
+
+    - name: "cAdvisor"
+      url: "http://cadvisor.magpie.local"
+      logo: "https://github.com/NX211/homer-icons/raw/master/png/cadvisor.png"
+      type: "Ping"
+
+    - name: "Pi-hole"
+      url: "http://pihole.magpie.local"
+      logo: "https://github.com/NX211/homer-icons/raw/master/png/pihole.png"
+      type: "PiHole"
+
+    - name: "Navidrome"
+      url: "http://navidrome.magpie.local"
+      logo: "https://github.com/NX211/homer-icons/raw/master/png/navidrome.png"
