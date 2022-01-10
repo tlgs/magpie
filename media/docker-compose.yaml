@@ -14,11 +14,11 @@ services:
     environment:
       ND_SPOTIFY_ID: "${SPOTIFY_ID}"
       ND_SPOTIFY_SECRET: "${SPOTIFY_SECRET}"
+    ports:
+      - "4533:4533"
     volumes:
       - "${HOME}/navidrome/data:/data"
       - "${HOME}/music:/music:ro"
-    ports:
-      - "4533:4533"
     networks:
       - traefik_net
     restart: unless-stopped
@@ -36,10 +36,7 @@ services:
       BNB_SONOS_DEVICE_DISCOVERY: "true"
       BNB_SONOS_SEED_HOST: "${SONOS_IP}"
       BNB_SUBSONIC_URL: "http://navidrome.magpie.local"
-      BNB_SUBSONIC_ARTIST_IMAGE_CACHE: "/navidrome-data/cache/images"
       TZ: "${TZ}"
-    volumes:
-            - "${HOME}/navidrome/data:/navidrome-data:ro"
     extra_hosts:
       - "navidrome.magpie.local:${HOST_IP}"
     ports:
@@ -57,12 +54,12 @@ services:
       - SYS_MODULE
     environment:
       NFS_DISABLE_VERSION_3: 1
+    ports:
+      - 2049:2049
     volumes:
       - "/lib/modules:/lib/modules:ro"
       - "./nfs-server/exports.txt:/etc/exports:ro"
       - "${HOME}/music:/music"
-    ports:
-      - 2049:2049
     networks:
       - traefik_net
     restart: unless-stopped
