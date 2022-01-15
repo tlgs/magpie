@@ -11,9 +11,6 @@ services:
       - "traefik.http.routers.navidrome.rule=Host(`navidrome.magpie.local`)"
       - "traefik.http.services.navidrome.loadbalancer.server.port=4533"
     user: 1000:1000
-    environment:
-      ND_SPOTIFY_ID: "${SPOTIFY_ID}"
-      ND_SPOTIFY_SECRET: "${SPOTIFY_SECRET}"
     ports:
       - "4533:4533"
     volumes:

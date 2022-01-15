@@ -11,8 +11,6 @@ Expected environment variables in `.env`:
 | Environment variable | Description                                                                         |
 | -------------------- | ----------------------------------------------------------------------------------- |
 | TZ                   | Timezone (see [here](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones)) |
-| SPOTIFY\_ID          | Spotify client ID                                                                   |
-| SPOTIFY\_SECRET      | Spotify client secret                                                               |
 | SONOS\_IP            | Sonos device IP address                                                             |
 | HOST\_IP             | Host IP address                                                                     |
 
