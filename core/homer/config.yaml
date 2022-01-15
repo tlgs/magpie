@@ -38,7 +38,6 @@ services:
         subtitle: "DNS sinkhole"
         url: "http://pihole.magpie.local"
         logo: "https://github.com/NX211/homer-icons/raw/master/png/pihole.png"
-        type: "PiHole"
 
   - name: "meta"
     icon: "fas fa-cogs"
@@ -46,18 +45,19 @@ services:
       - name: "Traefik"
         subtitle: "Reverse proxy"
         url: "http://traefik.magpie.local"
-        endpoint: "http://traefik.magpie.local/ping"
         logo: "https://github.com/NX211/homer-icons/raw/master/png/traefik.png"
-        type: "Ping"
+
+      - name: "Uptime Kuma"
+        subtitle: "Service status monitoring"
+        url: "http://status.magpie.local"
+        logo: "https://raw.githubusercontent.com/louislam/uptime-kuma/master/public/icon.png"
 
       - name: "Portainer"
         subtitle: "Docker GUI management"
         url: "http://portainer.magpie.local"
         logo: "https://github.com/NX211/homer-icons/raw/master/png/portainer.png"
-        type: "Ping"
 
       - name: "cAdvisor"
         subtitle: "Container metrics aggregator"
         url: "http://cadvisor.magpie.local"
         logo: "https://github.com/NX211/homer-icons/raw/master/png/cadvisor.png"
-        type: "Ping"

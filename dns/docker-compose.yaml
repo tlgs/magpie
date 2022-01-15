@@ -10,7 +10,7 @@ services:
       - "traefik.enable=true"
       - "traefik.docker.network=traefik_net"
       - "traefik.http.routers.pihole.rule=Host(`pihole.magpie.local`)"
-      - "traefik.http.routers.pihole.middlewares=pihole-dashboard,homer-cors"
+      - "traefik.http.routers.pihole.middlewares=pihole-dashboard"
       - "traefik.http.middlewares.pihole-dashboard.addprefix.prefix=/admin"
       - "traefik.http.services.pihole.loadbalancer.server.port=80"
     cap_add:
@@ -29,6 +29,7 @@ services:
       - "traefik.magpie.local:${HOST_IP}"
       - "portainer.magpie.local:${HOST_IP}"
       - "cadvisor.magpie.local:${HOST_IP}"
+      - "status.magpie.local:${HOST_IP}"
       - "pihole.magpie.local:${HOST_IP}"
       - "navidrome.magpie.local:${HOST_IP}"
       - "bonob.magpie.local:${HOST_IP}"

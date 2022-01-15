@@ -14,14 +14,6 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.rule=Host(`traefik.magpie.local`)"
       - "traefik.http.routers.traefik.service=api@internal"
-      - "traefik.http.routers.traefik-ping.rule=Host(`traefik.magpie.local`) && Method(`Head`) && Path(`/`)"
-      - "traefik.http.routers.traefik-ping.middlewares=homer-cors"
-      - "traefik.http.routers.traefik-ping.service=ping@internal"
-      - "traefik.http.middlewares.homer-cors.headers.accesscontrolallowcredentials=true"
-      - "traefik.http.middlewares.homer-cors.headers.accesscontrolallowmethods=GET,OPTIONS,PUT"
-      - "traefik.http.middlewares.homer-cors.headers.accesscontrolalloworiginlist=http://magpie.local"
-      - "traefik.http.middlewares.homer-cors.headers.accesscontrolmaxage=100"
-      - "traefik.http.middlewares.homer-cors.headers.addvaryheader=true"
     ports:
       - "80:80"
       - "8080:8080"
@@ -54,7 +46,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.portainer.rule=Host(`portainer.magpie.local`)"
-      - "traefik.http.routers.portainer.middlewares=homer-cors"
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
     ports:
       - "8082:9000"
@@ -72,7 +63,6 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.cadvisor.rule=Host(`cadvisor.magpie.local`)"
-      - "traefik.http.routers.cadvisor.middlewares=homer-cors"
       - "traefik.http.services.cadvisor.loadbalancer.server.port=8080"
     ports:
       - "8083:8080"
@@ -88,9 +78,30 @@ services:
       - traefik_net
     restart: unless-stopped
 
+  uptime-kuma:
+    image: louislam/uptime-kuma:1.11.3-alpine
+    container_name: uptime-kuma
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.uptime-kuma.rule=Host(`status.magpie.local`)"
+      - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
+    dns:
+      - "172.22.0.1"
+    volumes:
+      - "uptime-kuma_data:/app/data"
+    ports:
+      - "8085:3001"
+    networks:
+      - traefik_net
+    restart: unless-stopped
+
+
 networks:
   traefik_net:
     name: traefik_net
+    ipam:
+      config:
+        - subnet: 172.22.0.0/16
 
 volumes:
   homer_data:
@@ -98,3 +109,6 @@ volumes:
 
   portainer_data:
     name: portainer_data
+
+  uptime-kuma_data:
+    name: uptime-kuma_data
