@@ -30,13 +30,18 @@ with Diagram(
             homer = Docker("homer")
             portainer = Docker("portainer")
             cadvisor = Docker("cadvisor*")
+            uptime_kuma = Docker("uptime-kuma")
 
         with Cluster("media"):
             navidrome = Docker("navidrome")
             bonob = Docker("bonob")
             nfs_server = Docker("nfs-server*")
 
-    traefik >> http >> [traefik, homer, portainer, cadvisor, pihole, bonob, navidrome]
+    (
+        traefik
+        >> http
+        >> [traefik, homer, portainer, cadvisor, uptime_kuma, pihole, bonob, navidrome]
+    )
 
     pihole >> dns >> unbound
     bonob >> http >> navidrome
