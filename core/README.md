@@ -6,7 +6,6 @@
 - [`portainer`](https://docs.portainer.io/) is a GUI management application for Docker (and more)
 - [`cAdvisor`](https://github.com/google/cadvisor) analyzes resource usage and performance
   characteristics of running containers
-- [`uptime-kuma`](https://github.com/louislam/uptime-kuma) is a service status monitoring tool
 
 ## cAdvisor
 

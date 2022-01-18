@@ -78,23 +78,6 @@ services:
       - traefik_net
     restart: unless-stopped
 
-  uptime-kuma:
-    image: louislam/uptime-kuma:1.11.3-alpine
-    container_name: uptime-kuma
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.uptime-kuma.rule=Host(`status.magpie.local`)"
-      - "traefik.http.services.uptime-kuma.loadbalancer.server.port=3001"
-    dns:
-      - "172.22.0.1"
-    volumes:
-      - "uptime-kuma_data:/app/data"
-    ports:
-      - "8085:3001"
-    networks:
-      - traefik_net
-    restart: unless-stopped
-
 
 networks:
   traefik_net:
@@ -109,6 +92,3 @@ volumes:
 
   portainer_data:
     name: portainer_data
-
-  uptime-kuma_data:
-    name: uptime-kuma_data

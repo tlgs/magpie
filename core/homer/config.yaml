@@ -47,11 +47,6 @@ services:
         url: "http://traefik.magpie.local"
         logo: "https://github.com/NX211/homer-icons/raw/master/png/traefik.png"
 
-      - name: "Uptime Kuma"
-        subtitle: "Service status monitoring"
-        url: "http://status.magpie.local"
-        logo: "https://raw.githubusercontent.com/louislam/uptime-kuma/master/public/icon.png"
-
       - name: "Portainer"
         subtitle: "Docker GUI management"
         url: "http://portainer.magpie.local"
