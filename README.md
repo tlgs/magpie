@@ -2,26 +2,20 @@
 
 magpie is a simple homelab setup.
 
-| Host                      | CPU              | RAM   | Storage      | Hostname | IP            |
-| ------------------------- | ---------------- | ----- | ------------ | -------- | ------------- |
-| NanoPi NEO v1.4           | Allwinner H3     | 512MB | 32GB MicroSD | n.magpie | 192.168.0.200 |
-| Raspberry Pi 4B (rev 1.1) | Broadcom BCM2711 | 4GB   | 64GB MicroSD | r.magpie | 192.168.0.201 |
+| Host                      | RAM   | Hostname | IP            |
+| ------------------------- | ----- | -------- | ------------- |
+| NanoPi NEO v1.4           | 512MB | n.magpie | 192.168.0.200 |
+| Raspberry Pi 4B (rev 1.1) | 4GB   | r.magpie | 192.168.0.201 |
 
 ## Setup
 
 1. Create an SSH key-pair, `ssh-keygen -t ed25519 -f ~/.ssh/magpie_ed25519`
 
-### Getting and patching images
+### Downloading and patching images
 
-For the NanoPi NEO:
+For both the NEO and the Pi, download the images using `scripts/get-dietpi`.
 
-1. Download and decompress image: `./scripts/get-dietpi nanopineo`
-2. Patch: `./scripts/patch-dietpi DietPi_NanoPiNEO-ARMv7-Bullseye.img n.magpie 192.168.0.200`
-
-For the Raspberry Pi:
-
-1. Download and decompress image: `./scripts/get-dietpi rpi4b`
-2. Patch: `./scripts/patch-dietpi DietPi_RPi-ARMv8-Bullseye.img r.magpie 192.168.0.201`
+Patch each image using `scripts/patch-dietpi` and passing the appropriate arguments.
 
 ### Bootstraping
 
