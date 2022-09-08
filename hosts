@@ -1,0 +1,2 @@
+n.magpie ansible_host='192.168.0.200'
+r.magpie ansible_host='192.168.0.201'

@@ -1,0 +1,77 @@
+---
+- name: "Setup users"
+  hosts: all
+  tags: [never, first-run]
+  vars:
+    ansible_user: root
+    ansible_password: dietpi
+    ansible_host_key_checking: false
+    new_users:
+      - "{{ lookup('env', 'USER') }}"
+      - ansible
+    ssh_public_key_file: "{{ lookup('env', 'HOME') + '/.ssh/magpie_ed25519.pub' }}"
+
+  tasks:
+    - name: "Delete dietpi user"
+      user:
+        name: dietpi
+        state: absent
+        remove: true
+
+    - name: "Add regular/automation users"
+      user:
+        name: "{{ item }}"
+        state: present
+        shell: /bin/bash
+      loop: "{{ new_users }}"
+
+    - name: "Give passwordless sudo by copying files to /etc/sudoers.d/"
+      template:
+        src: templates/sudoers.d.j2
+        dest: "/etc/sudoers.d/{{ item }}"
+        validate: "visudo -cf %s"
+      loop: "{{ new_users }}"
+
+    - name: "Set authorized SSH key"
+      authorized_key:
+        user: "{{ item }}"
+        key: "{{ lookup('file', ssh_public_key_file) }}"
+        state: present
+        exclusive: true
+      loop: "{{ new_users }}"
+
+    - name: "Lock root password"
+      user:
+        name: root
+        state: present
+        password_lock: true
+
+- name: "Lock down SSH"
+  hosts: all
+  tags: [first-run]
+  become: true
+
+  handlers:
+    - name: "Restart OpenSSH daemon"
+      listen: "restart ssh"
+      service:
+        name: sshd
+        state: restarted
+
+  tasks:
+    - name: "Remove default dietpi.conf"
+      file:
+        path: /etc/ssh/sshd_config.d/dietpi.conf
+        state: absent
+
+    - name: "Configure OpenSSH daemon"
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: "{{ item.re }}"
+        line: "{{ item.v }}"
+        state: present
+        validate: "/usr/sbin/sshd -T -f %s"
+      loop:
+        - {re: "^PasswordAuthentication", v: "PasswordAuthentication no"}
+        - {re: "^PermitRootLogin", v: "PermitRootLogin no"}
+      notify: "restart ssh"

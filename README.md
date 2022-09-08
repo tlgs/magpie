@@ -1,16 +1,30 @@
 # magpie
 
-magpie is a simple homelab setup - a bunch of Docker services
-deployed on a single
-[Raspberry Pi 4 model B (rev 1.1)](https://www.raspberrypi.com/products/raspberry-pi-4-model-b/) running Raspberry Pi OS Lite.
+magpie is a simple homelab setup.
 
-![Architecture diagram](assets/architecture.png)
+| Host                      | CPU              | RAM   | Storage      | Hostname | IP            |
+| ------------------------- | ---------------- | ----- | ------------ | -------- | ------------- |
+| NanoPi NEO v1.4           | Allwinner H3     | 512MB | 32GB MicroSD | n.magpie | 192.168.0.200 |
+| Raspberry Pi 4B (rev 1.1) | Broadcom BCM2711 | 4GB   | 64GB MicroSD | r.magpie | 192.168.0.201 |
 
-## Notes
+## Setup
 
-Using the `.local` TLD can be problematic due to an
-[Avahi bug](https://wiki.archlinux.org/title/Avahi#Hostname_changes_with_appending_incrementing_numbers);
-this makes resolving `magpie.local` unreliable on systems with mDNS resolvers.
-See [[1]](https://www.howtogeek.com/167190/how-and-why-to-assign-the-.local-domain-to-your-raspberry-pi/),
-and [[2]](https://www.ctrl.blog/entry/homenet-domain-name.html).
-Might be a good excuse to move to back to Pi-hole's DHCP server solution.
+1. Create an SSH key-pair, `ssh-keygen -t ed25519 -f ~/.ssh/magpie_ed25519`
+
+### Getting and patching images
+
+For the NanoPi NEO:
+
+1. Download and decompress image: `./scripts/get-dietpi nanopineo`
+2. Patch: `./scripts/patch-dietpi DietPi_NanoPiNEO-ARMv7-Bullseye.img n.magpie 192.168.0.200`
+
+For the Raspberry Pi:
+
+1. Download and decompress image: `./scripts/get-dietpi rpi4b`
+2. Patch: `./scripts/patch-dietpi DietPi_RPi-ARMv8-Bullseye.img r.magpie 192.168.0.201`
+
+### Bootstraping
+
+1. Flash SD cards and boot up; DietPi's first boot can take a while (10+ minutes)
+2. Make sure you can SSH in using the default credentials
+3. Run `ansible-playbook bootstrap.yaml -t first-run`
