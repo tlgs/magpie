@@ -2,46 +2,62 @@
 - name: "Setup users"
   hosts: all
   tags: [never, first-run]
+  become: true
   vars:
-    ansible_user: root
-    ansible_password: dietpi
-    ansible_host_key_checking: false
+    ansible_user: "{{ default_user }}"
+    ansible_password: "{{ default_password }}"
     new_users:
       - "{{ lookup('env', 'USER') }}"
       - ansible
     ssh_public_key_file: "{{ lookup('env', 'HOME') + '/.ssh/magpie_ed25519.pub' }}"
 
   tasks:
-    - name: "Delete dietpi user"
-      user:
-        name: dietpi
-        state: absent
-        remove: true
-
     - name: "Add regular/automation users"
-      user:
+      ansible.builtin.user:
         name: "{{ item }}"
         state: present
         shell: /bin/bash
       loop: "{{ new_users }}"
 
     - name: "Give passwordless sudo by copying files to /etc/sudoers.d/"
-      template:
+      ansible.builtin.template:
         src: templates/sudoers.d.j2
         dest: "/etc/sudoers.d/{{ item }}"
         validate: "visudo -cf %s"
       loop: "{{ new_users }}"
 
     - name: "Set authorized SSH key"
-      authorized_key:
+      ansible.posix.authorized_key:
         user: "{{ item }}"
         key: "{{ lookup('file', ssh_public_key_file) }}"
         state: present
         exclusive: true
       loop: "{{ new_users }}"
 
-    - name: "Lock root password"
-      user:
+- name: "Cleanup default users"
+  hosts: all
+  tags: [first-run]
+  become: true
+  gather_facts: false
+
+  tasks:
+    # killall returns a zero return code if at least one process has been killed
+    # for  each listed  command,  or no commands were listed and at least one process
+    # matched the -u and -Z search criteria.  killall returns non-zero otherwise.
+    - name: "Kill all processes run by user pi"
+      ansible.builtin.command: killall -u pi
+      register: result
+      changed_when: result.rc == 0
+      failed_when: result.rc != 0 and result.stderr != "Cannot find user pi"
+
+    - name: "Delete pi user"
+      ansible.builtin.user:
+        name: pi
+        state: absent
+        remove: true
+
+    - name: "Lock root user password"
+      ansible.builtin.user:
         name: root
         state: present
         password_lock: true
@@ -50,22 +66,18 @@
   hosts: all
   tags: [first-run]
   become: true
+  gather_facts: false
 
   handlers:
     - name: "Restart OpenSSH daemon"
       listen: "restart ssh"
-      service:
+      ansible.builtin.service:
         name: sshd
         state: restarted
 
   tasks:
-    - name: "Remove default dietpi.conf"
-      file:
-        path: /etc/ssh/sshd_config.d/dietpi.conf
-        state: absent
-
     - name: "Configure OpenSSH daemon"
-      lineinfile:
+      ansible.builtin.lineinfile:
         dest: /etc/ssh/sshd_config
         regexp: "{{ item.re }}"
         line: "{{ item.v }}"
