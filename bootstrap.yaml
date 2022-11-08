@@ -3,6 +3,7 @@
   hosts: all
   tags: [never, first-run]
   become: true
+  gather_facts: false
   vars:
     ansible_user: "{{ default_user }}"
     ansible_password: "{{ default_password }}"
@@ -34,8 +35,14 @@
         exclusive: true
       loop: "{{ new_users }}"
 
-- name: "Cleanup default users"
-  hosts: all
+    - name: "Lock root user password"
+      ansible.builtin.user:
+        name: root
+        state: present
+        password_lock: true
+
+- name: "Cleanup default user"
+  hosts: raspberry_pi
   tags: [first-run]
   become: true
   gather_facts: false
@@ -56,24 +63,11 @@
         state: absent
         remove: true
 
-    - name: "Lock root user password"
-      ansible.builtin.user:
-        name: root
-        state: present
-        password_lock: true
-
 - name: "Lock down SSH"
   hosts: all
   tags: [first-run]
   become: true
   gather_facts: false
-
-  handlers:
-    - name: "Restart OpenSSH daemon"
-      listen: "restart ssh"
-      ansible.builtin.service:
-        name: sshd
-        state: restarted
 
   tasks:
     - name: "Configure OpenSSH daemon"
@@ -86,4 +80,27 @@
       loop:
         - {re: "^PasswordAuthentication", v: "PasswordAuthentication no"}
         - {re: "^PermitRootLogin", v: "PermitRootLogin no"}
-      notify: "restart ssh"
+      notify: "Restart OpenSSH daemon"
+
+  handlers:
+    - name: "Restart OpenSSH daemon"
+      ansible.builtin.systemd:
+        name: sshd
+        state: restarted
+
+- name: "Upgrade system packages"
+  hosts: all
+  tags: [first-run]
+  become: true
+  gather_facts: false
+
+  tasks:
+    - name: "Update cache and upgrade packages"
+      ansible.builtin.apt:
+        update_cache: true
+        upgrade: "yes"
+      notify: "Reboot host"
+
+  handlers:
+    - name: "Reboot host"
+      ansible.builtin.reboot:

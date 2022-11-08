@@ -1,13 +1,15 @@
-[all.hosts]
+[raspberry_pi.hosts]
 pica = { ansible_host = "192.168.0.200" }
-urocissa = { ansible_host = "192.168.0.201" }
-# cissa     = { ansible_host = "192.168.0.202" }
-# cyanopica = { ansible_host = "192.168.0.203" }
 
-[raspberry_pi]
-hosts = { pica = { } }
-vars = { default_user = "pi", default_password = "raspberry" }
+[raspberry_pi.vars]
+default_user = "pi"
+default_password = "raspberry"
 
-[rock]
-hosts = { urocissa = { } }
-vars = { default_user = "root", default_password = "1234" }
+[rock.hosts]
+urocissa  = { ansible_host = "192.168.0.201" }
+cissa     = { ansible_host = "192.168.0.202" }
+cyanopica = { ansible_host = "192.168.0.203" }
+
+[rock.vars]
+default_user = "root"
+default_password = "1234"
