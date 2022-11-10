@@ -1,0 +1,100 @@
+---
+- name: "Set up k3s prerequisites"
+  hosts: raspberry_pi
+  become: true
+
+  tasks:
+    - name: "Activate cgroup support"
+      ansible.builtin.lineinfile:
+        path: /boot/cmdline.txt
+        regexp: '^((?!.*\bcgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory\b).*)$'
+        line: '\1 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory'
+        backrefs: true
+      notify: "Reboot host"
+
+  handlers:
+    - name: "Reboot host"
+      ansible.builtin.reboot:
+
+- name: "Download k3s binary"
+  hosts: all
+  become: true
+  vars:
+    k3s_version: "v1.25.3+k3s1"
+
+  tasks:
+    - name: "Download k3s binary (arm64) from GitHub releases"
+      ansible.builtin.get_url:
+        url: https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s-arm64
+        checksum: sha256:f256de3455229829f4bf7a9432480e1b612f9662661b236841bb58a254ea843e
+        dest: /usr/local/bin/k3s
+        mode: 0755
+
+- name: "Setup k3s on master and retrieve token"
+  hosts: master
+  become: true
+
+  tasks:
+    - name: "Copy k3s service file"
+      ansible.builtin.template:
+        src: templates/k3s.service.j2
+        dest: /etc/systemd/system/k3s.service
+        mode: 0644
+      register: k3s_service
+      vars:
+        cmd_args: "server --server https://{{ ansible_host }}:6443 --write-kubeconfig-mode 644"
+
+    - name: "Start and enable k3s service"
+      ansible.builtin.systemd:
+        name: k3s
+        state: started
+        enabled: true
+        daemon_reload: true
+
+    - name: "Wait for k3s token"
+      ansible.builtin.wait_for:
+        path: /var/lib/rancher/k3s/server/node-token
+
+    - name: "Read token"
+      ansible.builtin.slurp:
+        path: /var/lib/rancher/k3s/server/node-token
+      register: node_token
+
+    - name: "Store token for worker play"
+      ansible.builtin.set_fact:
+        token: "{{ node_token.content | b64decode | regex_replace('\n', '') }}"
+
+- name: "Setup k3s on workers"
+  hosts: workers
+  become: true
+  vars:
+    master_ip: "{{ hostvars[groups.master[0]].ansible_host }}"
+    token: "{{ hostvars[groups.master[0]].token }}"
+
+  tasks:
+    - name: "Copy k3s-agent service file"
+      ansible.builtin.template:
+        src: templates/k3s.service.j2
+        dest: /etc/systemd/system/k3s-agent.service
+        mode: 0644
+      vars:
+        cmd_args: "agent --server https://{{ master_ip }}:6443 --token {{ token }}"
+
+    - name: "Start and enable k3s-agent service"
+      ansible.builtin.systemd:
+        name: k3s-agent
+        state: started
+        enabled: true
+        daemon_reload: true
+
+- name: "Add utility k3s symlinks"
+  hosts: all
+  become: true
+
+  tasks:
+    - name: "Create symlinks"
+      ansible.builtin.file:
+        path: "/usr/local/bin/{{ item }}"
+        state: link
+        src: /usr/local/bin/k3s
+      loop: [kubectl, crictl, ctr]

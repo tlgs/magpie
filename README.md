@@ -1,6 +1,6 @@
 # magpie
 
-magpie is a simple homelab setup.
+magpie is a ~~simple~~ homelab setup.
 
 | Hostname  | Host           | OS                         | Storage                          |
 | --------- | -------------- | -------------------------- | -------------------------------- |
@@ -19,12 +19,12 @@ and finally running an Ansible bootstrap playbook.
 ### Operating system choice
 
 It would be preferable to have an uniform OS layer, but it seems
-**Armbian doesn't reliabily boot on the Raspberry Pi**.
+Armbian doesn't reliabily boot on the Raspberry Pi.
 The ROCK 4 A+ boards go with Armbian and the Raspberry Pi uses the stock
 Raspberry Pi OS Lite image.
-Using Debian Bullseye flavour for both.
+Using Debian Bullseye flavor for both.
 
-Some notes on stock images:
+Some notes on the stock images:
 
 - Random number generation: Armbian uses `haveged`, RPi OS uses `rng-tools-debian`
 - NTP / SNTP: Armbian uses `chrony`, RPi OS uses `systemd-timesyncd`
@@ -40,7 +40,7 @@ On the flipside, enabling
 [remote access](https://www.raspberrypi.com/documentation/computers/remote-access.html)
 on the Raspberry Pi, requires some doing (on the `boot` partition):
 
-1. Create an empty file named `ssh`
+1. Add an empty `ssh` file
 2. Add a `userconf.txt` file containing a single line: `username:encryptedpassword`
    (see [here](https://www.raspberrypi.com/documentation/computers/configuration.html#configuring-a-user)).
    Set the historically default user `pi` with `raspberry` as password.
@@ -51,7 +51,7 @@ I recommend setting a static IP for each board.
 
 ### Writing the image to the on-board eMMC (ROCK 4 A+)
 
-Use `armbian-install` and pick **Boot from eMMC - system on eMMC**.
+Use `armbian-install` and pick 'Boot from eMMC - system on eMMC'.
 
 If that doesn't work, follow the directions in
 [Radxa's wiki](https://wiki.radxa.com/Rockpi4/install/eMMC):
@@ -59,10 +59,11 @@ If that doesn't work, follow the directions in
 1. `wget $ARMBIAN_IMG_URL`
 2. `xzcat $ARMBIAN_IMG | dd of=/dev/mmcblk1 bs=1M`
 
-### Bootstrap machines using Ansible
+### Bootstrap hosts using Ansible
 
 1. Create an SSH key-pair, `ssh-keygen -t ed25519 -f ~/.ssh/magpie_ed25519`
 2. Run `ansible-playbook bootstrap.yaml -t first-run`
+3. Run `ansible-playbook k3s.yaml`
 
 ### Notes
 
