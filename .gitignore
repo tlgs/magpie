@@ -1,1 +1,5 @@
+.envrc
+
+.kube/
+
 *.img.xz

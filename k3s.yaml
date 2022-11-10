@@ -98,3 +98,25 @@
         state: link
         src: /usr/local/bin/k3s
       loop: [kubectl, crictl, ctr]
+
+- name: "Retrieve kubeconfig from master"
+  hosts: master
+
+  tasks:
+    - name: "Fetch kubeconfig to localhost"
+      ansible.builtin.fetch:
+        src: /etc/rancher/k3s/k3s.yaml
+        dest: .kube/config
+        flat: true
+
+- name: "Set appropriate server IP in kubeconfig"
+  hosts: localhost
+  vars:
+    master_ip: "{{ hostvars[groups.master[0]].ansible_host }}"
+
+  tasks:
+    - name: "Replace 127.0.0.1 with master IP"
+      ansible.builtin.lineinfile:
+        path: .kube/config
+        search_string: '    server: https://127.0.0.1:6443'
+        line: "    server: https://{{ master_ip }}:6443"
