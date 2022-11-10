@@ -14,6 +14,7 @@ repos:
     rev: v1.28.0
     hooks:
       - id: yamllint
+        args: ['-d', '{extends: default, rules: {line-length: {max: 100}}}']
 
   - repo: https://github.com/ansible/ansible-lint
     rev: v6.8.6

@@ -3,7 +3,6 @@
   hosts: all
   tags: [never, first-run]
   become: true
-  gather_facts: false
   vars:
     ansible_user: "{{ default_user }}"
     ansible_password: "{{ default_password }}"
@@ -24,6 +23,7 @@
       ansible.builtin.template:
         src: templates/sudoers.d.j2
         dest: "/etc/sudoers.d/{{ item }}"
+        mode: 0644
         validate: "visudo -cf %s"
       loop: "{{ new_users }}"
 
@@ -45,7 +45,6 @@
   hosts: raspberry_pi
   tags: [first-run]
   become: true
-  gather_facts: false
 
   tasks:
     # killall returns a zero return code if at least one process has been killed
@@ -67,7 +66,6 @@
   hosts: all
   tags: [first-run]
   become: true
-  gather_facts: false
 
   tasks:
     - name: "Configure OpenSSH daemon"
@@ -78,8 +76,8 @@
         state: present
         validate: "/usr/sbin/sshd -T -f %s"
       loop:
-        - {re: "^PasswordAuthentication", v: "PasswordAuthentication no"}
-        - {re: "^PermitRootLogin", v: "PermitRootLogin no"}
+        - {re: '^PasswordAuthentication', v: 'PasswordAuthentication no'}
+        - {re: '^PermitRootLogin', v: 'PermitRootLogin no'}
       notify: "Restart OpenSSH daemon"
 
   handlers:
@@ -92,7 +90,6 @@
   hosts: all
   tags: [first-run]
   become: true
-  gather_facts: false
 
   tasks:
     - name: "Update cache and upgrade packages"
@@ -104,3 +101,13 @@
   handlers:
     - name: "Reboot host"
       ansible.builtin.reboot:
+
+- name: "Set hostnames"
+  hosts: all
+  tags: [first-run]
+  become: true
+
+  tasks:
+    - name: "Set system hostame"
+      ansible.builtin.hostname:
+        name: "{{ inventory_hostname }}"
