@@ -2,12 +2,12 @@
 
 magpie is a ~~simple~~ homelab setup.
 
-| Hostname  | Host           | OS                         | Storage                          |
-| --------- | -------------- | -------------------------- | -------------------------------- |
-| pica      | Raspberry Pi 4 | Raspberry Pi OS - Bullseye | 64GB microSD + 1TB SATA 2.5″ SSD |
-| urocissa  | ROCK 4 A+      | Armbian 22.08 - Bullseye   | 32GB on-board eMMC               |
-| cissa     | ROCK 4 A+      | Armbian 22.08 - Bullseye   | 32GB on-board eMMC               |
-| cyanopica | ROCK 4 A+      | Armbian 22.08 - Bullseye   | 32GB on-board eMMC               |
+| Hostname  | Host           | OS                         | Storage                       |
+| --------- | -------------- | -------------------------- | ----------------------------- |
+| pica      | Raspberry Pi 4 | Raspberry Pi OS - Bullseye | 64GB microSD                  |
+| cissa     | ROCK 4 A+      | Armbian 22.08 - Bullseye   | 32GB eMMC                     |
+| cyanopica | ROCK 4 A+      | Armbian 22.08 - Bullseye   | 32GB eMMC                     |
+| urocissa  | ROCK 4 A+      | Armbian 22.08 - Bullseye   | 32GB eMMC + 1TB SATA 2.5″ SSD |
 
 ## Setup
 
@@ -69,7 +69,7 @@ If that doesn't work, follow the directions in
 
 The [ROCK Pi 23 PoE HAT](https://wiki.radxa.com/ROCKPI_23W_PoE_HAT)
 has a PWM controllable fan "supported" by Radxa.
-It's not straighforward to set it up using Armbian so I didn't.
+It's not straighforward to set it up using Armbian, so I didn't.
 Here's a related
 [thread on the Armbian forums](https://forum.armbian.com/topic/20101-open-pwm-on-rockpi4-to-control-fan-on-poe-hat/)
 that should be a decent starting point.
