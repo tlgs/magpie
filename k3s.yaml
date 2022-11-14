@@ -40,16 +40,12 @@
         src: templates/k3s.service.j2
         dest: /etc/systemd/system/k3s.service
         mode: 0644
-      register: k3s_service
       vars:
-        cmd_args: "server --server https://{{ ansible_host }}:6443 --write-kubeconfig-mode 644"
+        cmd_args: "server --write-kubeconfig-mode 644"
+      notify: "Restart k3s daemon"
 
-    - name: "Start and enable k3s service"
-      ansible.builtin.systemd:
-        name: k3s
-        state: started
-        enabled: true
-        daemon_reload: true
+    - name: "Flush handlers"
+      ansible.builtin.meta: flush_handlers
 
     - name: "Wait for k3s token"
       ansible.builtin.wait_for:
@@ -63,6 +59,14 @@
     - name: "Store token for worker play"
       ansible.builtin.set_fact:
         token: "{{ node_token.content | b64decode | regex_replace('\n', '') }}"
+
+  handlers:
+    - name: "Restart k3s daemon"
+      ansible.builtin.systemd:
+        name: k3s
+        state: restarted
+        enabled: true
+        daemon_reload: true
 
 - name: "Setup k3s on workers"
   hosts: workers
@@ -79,11 +83,13 @@
         mode: 0644
       vars:
         cmd_args: "agent --server https://{{ master_ip }}:6443 --token {{ token }}"
+      notify: "Restart k3s-agent daemon"
 
-    - name: "Start and enable k3s-agent service"
+  handlers:
+    - name: "Restart k3s-agent daemon"
       ansible.builtin.systemd:
         name: k3s-agent
-        state: started
+        state: restarted
         enabled: true
         daemon_reload: true
 
