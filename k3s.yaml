@@ -28,7 +28,7 @@
         url: https://github.com/k3s-io/k3s/releases/download/{{ k3s_version }}/k3s-arm64
         checksum: sha256:f256de3455229829f4bf7a9432480e1b612f9662661b236841bb58a254ea843e
         dest: /usr/local/bin/k3s
-        mode: 0755
+        mode: '0755'
 
 - name: "Setup k3s on master and retrieve token"
   hosts: master
@@ -39,7 +39,7 @@
       ansible.builtin.template:
         src: templates/k3s.service.j2
         dest: /etc/systemd/system/k3s.service
-        mode: 0644
+        mode: '0644'
       vars:
         cmd_args: "server --write-kubeconfig-mode 644"
       notify: "Restart k3s daemon"
@@ -80,7 +80,7 @@
       ansible.builtin.template:
         src: templates/k3s.service.j2
         dest: /etc/systemd/system/k3s-agent.service
-        mode: 0644
+        mode: '0644'
       vars:
         cmd_args: "agent --server https://{{ master_ip }}:6443 --token {{ token }}"
       notify: "Restart k3s-agent daemon"

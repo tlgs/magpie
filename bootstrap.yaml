@@ -23,7 +23,7 @@
       ansible.builtin.template:
         src: templates/sudoers.d.j2
         dest: "/etc/sudoers.d/{{ item }}"
-        mode: 0644
+        mode: '0644'
         validate: "visudo -cf %s"
       loop: "{{ new_users }}"
 

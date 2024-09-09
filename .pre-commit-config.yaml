@@ -1,6 +1,6 @@
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.3.0
+    rev: v4.6.0
     hooks:
       - id: check-added-large-files
       - id: check-yaml
@@ -8,13 +8,15 @@ repos:
       - id: trailing-whitespace
 
   - repo: https://github.com/adrienverge/yamllint
-    rev: v1.28.0
+    rev: v1.35.1
     hooks:
       - id: yamllint
         args: ['-d', '{extends: default, rules: {line-length: {max: 100}}}']
 
   - repo: https://github.com/ansible/ansible-lint
-    rev: v6.8.6
+    rev: v24.7.0
     hooks:
       - id: ansible-lint
         name: ansible-lint
+        additional_dependencies:
+          - ansible
