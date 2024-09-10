@@ -4,8 +4,8 @@
   tags: [never, first-run]
   become: true
   vars:
-    ansible_user: "{{ default_user }}"
-    ansible_password: "{{ default_password }}"
+    ansible_user: 'root'
+    ansible_password: '1234'
     new_users:
       - "{{ lookup('env', 'USER') }}"
       - ansible
@@ -41,26 +41,6 @@
         state: present
         password_lock: true
 
-- name: "Cleanup default user"
-  hosts: raspberry_pi
-  tags: [first-run]
-  become: true
-
-  tasks:
-    # killall returns a zero return code if at least one process has been killed
-    # for  each listed  command,  or no commands were listed and at least one process
-    # matched the -u and -Z search criteria.  killall returns non-zero otherwise.
-    - name: "Kill all processes run by user pi"
-      ansible.builtin.command: killall -u pi
-      register: result
-      changed_when: result.rc == 0
-      failed_when: result.rc != 0 and result.stderr != "Cannot find user pi"
-
-    - name: "Delete pi user"
-      ansible.builtin.user:
-        name: pi
-        state: absent
-        remove: true
 
 - name: "Lock down SSH"
   hosts: all
@@ -86,6 +66,7 @@
         name: sshd
         state: restarted
 
+
 - name: "Upgrade system packages"
   hosts: all
   tags: [first-run]
@@ -101,6 +82,7 @@
   handlers:
     - name: "Reboot host"
       ansible.builtin.reboot:
+
 
 - name: "Set hostnames"
   hosts: all

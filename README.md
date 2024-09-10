@@ -2,23 +2,17 @@
 
 magpie is a ~~simple~~ homelab setup.
 
-| Hostname  | Host           | OS                         | Storage                       |
-| --------- | -------------- | -------------------------- | ----------------------------- |
-| pica      | Raspberry Pi 4 | Raspberry Pi OS (Bullseye) | 64GB microSD                  |
-| cissa     | ROCK 4 A+      | Armbian 22.08 (Bullseye)   | 32GB eMMC                     |
-| cyanopica | ROCK 4 A+      | Armbian 22.08 (Bullseye)   | 32GB eMMC                     |
-| urocissa  | ROCK 4 A+      | Armbian 22.08 (Bullseye)   | 32GB eMMC + 1TB SATA 2.5″ SSD |
+| Hostname  | Host           | OS                                   | Storage                       |
+| --------- | -------------- | ------------------------------------ | ----------------------------- |
+| pica      | Raspberry Pi 4 | Armbian 24.8.1 (Bookworm)            | 64GB microSD                  |
+| cissa     | ROCK 4 A+      | Armbian community 24.11.0 (Bookworm) | 32GB eMMC                     |
+| cyanopica | ROCK 4 A+      | Armbian community 24.11.0 (Bookworm) | 32GB eMMC                     |
+| urocissa  | ROCK 4 A+      | Armbian community 24.11.0 (Bookworm) | 32GB eMMC + 1TB SATA 2.5″ SSD |
 
 ## Setup
 
-I defer most of the homelab base system setup to a couple Ansible playbooks.
-
-However, getting the boards to a minimal working state still requires some manual steps:
-downloading OS images, flashing microSD cards,
-creating required the files for remote access on RPi OS,
-and writing the image to the on-board eMMC on the ROCK 4s.
-
-After that minimal working state is achieved, it's as simple as:
+Download OS images, flash microSD cards, write images to the on-board eMMC on the ROCK 4s.
+After that minimal working state is achieved, use Ansible:
 
 1. Create an SSH key-pair, `ssh-keygen -t ed25519 -f ~/.ssh/magpie_ed25519`
 2. Run `ansible-playbook bootstrap.yaml -t first-run`
@@ -26,13 +20,22 @@ After that minimal working state is achieved, it's as simple as:
 
 ### Writing the image to the on-board eMMC (ROCK 4 A+)
 
-Use `armbian-install` and pick 'Boot from eMMC - system on eMMC'.
+Flash a microSD card, boot up and run `armbian-install`:
+'Boot from eMMC - system on eMMC' -> 'ext4'.
 
 If that doesn't work, follow the directions in
-[Radxa's wiki](https://wiki.radxa.com/Rockpi4/install/eMMC):
+[Radxa's wiki](https://wiki.radxa.com/Rockpi4/install/eMMC).
 
-1. `wget $ARMBIAN_IMG_URL`
-2. `xzcat $ARMBIAN_IMG | dd of=/dev/mmcblk1 bs=1M`
+### Configuration
+
+```bash
+export ANSIBLE_INVENTORY=hosts.ini
+export ANSIBLE_REMOTE_USER=ansible
+export ANSIBLE_GATHERING=explicit
+export ANSIBLE_PYTHON_INTERPRETER=auto_silent
+
+export KUBECONFIG=.kube/config
+```
 
 ### Other notes
 
