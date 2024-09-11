@@ -94,6 +94,12 @@
       ansible.builtin.hostname:
         name: "{{ inventory_hostname }}"
 
+    - name: "Update /etc/hosts"
+      ansible.builtin.template:
+        src: templates/hosts.j2
+        dest: /etc/hosts
+        mode: '0644'
+
 - name: "Setup storage"
   hosts: storage
   tags: [first-run]
