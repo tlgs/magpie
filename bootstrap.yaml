@@ -50,14 +50,13 @@
   tasks:
     - name: "Configure OpenSSH daemon"
       ansible.builtin.lineinfile:
-        dest: /etc/ssh/sshd_config
-        regexp: "{{ item.re }}"
-        line: "{{ item.v }}"
-        state: present
+        path: /etc/ssh/sshd_config
+        regex: "{{ item.r }}"
+        value: "{{ item.v }}"
         validate: "/usr/sbin/sshd -T -f %s"
       loop:
-        - {re: '^PasswordAuthentication', v: 'PasswordAuthentication no'}
-        - {re: '^PermitRootLogin', v: 'PermitRootLogin no'}
+        - {r: '^PasswordAuthentication', v: 'PasswordAuthentication no'}
+        - {r: '^PermitRootLogin', v: 'PermitRootLogin no'}
       notify: "Restart OpenSSH daemon"
 
   handlers:
