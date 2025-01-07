@@ -1,21 +1,4 @@
 ---
-- name: "Set up k3s prerequisites"
-  hosts: raspberry_pi
-  become: true
-
-  tasks:
-    - name: "Activate cgroup support"
-      ansible.builtin.lineinfile:
-        path: /boot/cmdline.txt
-        regexp: '^((?!.*\bcgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory\b).*)$'
-        line: '\1 cgroup_enable=cpuset cgroup_memory=1 cgroup_enable=memory'
-        backrefs: true
-      notify: "Reboot host"
-
-  handlers:
-    - name: "Reboot host"
-      ansible.builtin.reboot:
-
 - name: "Download k3s binary"
   hosts: all
   become: true
