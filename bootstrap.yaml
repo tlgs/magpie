@@ -99,6 +99,25 @@
         dest: /etc/hosts
         mode: '0644'
 
+
+- name: "Setup Armbian MOTD"
+  hosts: all
+  tags: [first-run]
+  become: true
+
+  tasks:
+    - name: "Find all MOTD scripts"
+      ansible.builtin.find:
+        paths: /etc/update-motd.d
+      register: motd_scripts
+
+    - name: "Update MOTD scripts mode"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        mode: '0755'
+      loop: "{{ motd_scripts.files | map(attribute='path') }} "
+
+
 - name: "Setup storage"
   hosts: storage
   tags: [first-run]
