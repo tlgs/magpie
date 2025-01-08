@@ -1,6 +1,6 @@
 # magpie
 
-magpie is a ~~simple~~ homelab setup.
+magpie is an incomplete homelab setup.
 
 | Hostname  | Host           | OS                        | Storage                       |
 | --------- | -------------- | ------------------------- | ----------------------------- |
@@ -17,25 +17,22 @@ Download OS images, flash microSD cards, write images to the on-board eMMC on th
 2. `ansible-playbook bootstrap.yaml -t first-run`
 3. `ansible-playbook k3s.yaml`
 
-### Writing the image to the on-board eMMC (ROCK 4 A+)
-
-Flash a microSD card, boot up, run `armbian-install` and select
-'Boot from eMMC - system on eMMC' -> 'ext4'.
-
-See also: [Rockpi4/install/eMMC on Radxa's wiki](https://wiki.radxa.com/Rockpi4/install/eMMC).
-
 ### Configuration
 
 ```bash
-export ANSIBLE_INVENTORY=hosts.ini
-export ANSIBLE_REMOTE_USER=ansible
 export ANSIBLE_GATHERING=explicit
+export ANSIBLE_INVENTORY=hosts.ini
 export ANSIBLE_PYTHON_INTERPRETER=auto_silent
+export ANSIBLE_REMOTE_USER=ansible
 
 export KUBECONFIG=.kube/config
 ```
 
 ### Other notes
+
+To write the image to the on-board eMMC (Rock 4s),
+run `armbian-install` and select 'Boot from eMMC - system on eMMC' → 'ext4'.
+See [Rockpi4/install/eMMC on Radxa's wiki](https://wiki.radxa.com/Rockpi4/install/eMMC).
 
 The [ROCK Pi 23 PoE HAT](https://wiki.radxa.com/ROCKPI_23W_PoE_HAT)
 has a PWM controllable fan "supported" by Radxa.
